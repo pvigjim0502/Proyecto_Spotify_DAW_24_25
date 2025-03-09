@@ -1,0 +1,47 @@
+:root {
+    --color-primario: #4361ee;
+    --color-primario-oscuro: #2c4aa0;
+    --color-secundario: #4cc9f0;
+    --color-exito: #06d6a0;
+    --color-advertencia: #ffd166;
+    --color-peligro: #ef476f;
+    --color-claro: #f8fafc;
+    --color-oscuro: #1a1a2e;
+
+    --fondo-body: #ffffff;
+    --color-texto-body: #1a1a2e;
+    --fondo-header: var(--color-primario);
+    --fondo-footer: var(--color-oscuro);
+
+    --espaciado-xs: 0.5rem;
+    --espaciado-sm: 1rem;
+    --espaciado-md: 1.5rem;
+    --espaciado-lg: 2rem;
+    --espaciado-xl: 3rem;
+
+    --fuente-primaria: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --tamano-fuente-base: 1rem;
+    --altura-linea-base: 1.6;
+}
+
+body {
+    font-family: var(--fuente-primaria);
+    font-size: var(--tamano-fuente-base);
+    line-height: var(--altura-linea-base);
+    background-color: var(--fondo-body);
+    color: var(--color-texto-body);
+    margin: 0;
+    padding-top: 4rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#pagina-inicio {
+    flex: 1;
+    margin-bottom: var(--espaciado-md);
+    transition: opacity 0.5s ease;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
