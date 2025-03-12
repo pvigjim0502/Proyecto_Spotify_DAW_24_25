@@ -1,3 +1,7 @@
+/* 1. Importaciones */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* 2. Variables CSS */
 :root {
     --color-primario: #4361ee;
     --color-primario-oscuro: #2c4aa0;
@@ -24,6 +28,7 @@
     --altura-linea-base: 1.6;
 }
 
+/* 3. Estilos base */
 body {
     font-family: var(--fuente-primaria);
     font-size: var(--tamano-fuente-base);
@@ -38,10 +43,96 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#pagina-inicio {
-    flex: 1;
-    margin-bottom: var(--espaciado-md);
-    transition: opacity 0.5s ease;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--espaciado-md);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* 4. Tipografía */
+h1,
+.h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--espaciado-lg);
+    color: var(--color-primario);
+    transition: color 0.3s ease;
+}
+
+h1:hover,
+.h1:hover {
+    color: var(--color-primario-oscuro);
+}
+
+/* 5. Encabezado y navegación */
+#cabecera {
+    background-color: var(--fondo-header);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.navbar {
+    padding: var(--espaciado-sm) 0;
+}
+
+.navbar-brand img {
+    height: 2.5rem;
+    width: auto;
+}
+
+.nav-link {
+    padding: var(--espaciado-xs) var(--espaciado-sm);
+    font-weight: 500;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    margin: 0 3px;
+    border-radius: 6px;
+}
+
+.nav-link:hover {
+    color: var(--color-primario) !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu {
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    opacity: 0;
+    display: block;
+    visibility: hidden;
+    margin-top: 5px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.navbar-dark .navbar-nav .dropdown-menu {
+    background-color: var(--fondo-header);
+    border: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-dark .navbar-nav .dropdown-item {
+    color: #ffffff;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    padding: 10px 16px;
+}
+
+.navbar-dark .navbar-nav .dropdown-item:hover {
+    color: #ffffff;
+    background-color: rgba(59, 130, 246, 0.2);
+}
+
+body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-menu {
+    background-color: var(--fondo-body);
+}
+
+body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item {
+    color: var(--color-texto-body);
+}
+
+body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
+    color: var(--color-primario);
+    background-color: rgba(59, 130, 246, 0.1);
+}
