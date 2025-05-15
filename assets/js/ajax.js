@@ -118,3 +118,44 @@ async function registrarUsuario() {
         mostrarToast('Error de conexión: ' + error.message, 'error');
     }
 }
+
+function enviarCorreoRecuperacion() {
+    // guardamos el email que escribio el usuario
+    var email = document.getElementById('emailOlvido').value;
+
+    // revisamos si el usuario escribio algo
+    if (!email) {
+        document.getElementById('mensaje-error-recuperacion').textContent = 'Por favor, ingresa tu correo electrónico.';
+        return;
+    }
+
+    // enviamos el correo al servidor
+    fetch('./PHPMailer/enviarCorreoRecuperacion.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            accion: 'recuperar_contrasena',
+            correo: email
+        })
+    })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Error HTTP: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.exito) {
+                alert(data.mensaje);
+                mostrarLogin();
+            } else {
+                document.getElementById('mensaje-error-recuperacion').textContent = data.mensaje;
+            }
+        })
+        .catch(function (error) {
+            console.error('Error:', error);
+            document.getElementById('mensaje-error-recuperacion').textContent = 'Error de red o servidor: ' + error.message;
+        });
+}
