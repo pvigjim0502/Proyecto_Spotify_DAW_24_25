@@ -3,19 +3,19 @@
 
 /* 2. Variables CSS */
 :root {
-    --color-primario: #4361ee;
-    --color-primario-oscuro: #2c4aa0;
-    --color-secundario: #4cc9f0;
-    --color-exito: #06d6a0;
-    --color-advertencia: #ffd166;
-    --color-peligro: #ef476f;
-    --color-claro: #f8fafc;
-    --color-oscuro: #1a1a2e;
+    --color-primario: #1DB954;
+    --color-primario-oscuro: #178c42;
+    --color-secundario: #1ED760;
+    --color-exito: #1DB954;
+    --color-advertencia: #FFCF40;
+    --color-peligro: #E95D5D;
+    --color-claro: #FFFFFF;
+    --color-oscuro: #000000;
 
-    --fondo-body: #ffffff;
-    --color-texto-body: #1a1a2e;
-    --fondo-header: var(--color-primario);
-    --fondo-footer: var(--color-oscuro);
+    --fondo-body: #121212;
+    --color-texto-body: #FFFFFF;
+    --fondo-header: #000000;
+    --fondo-footer: #191414;
 
     --espaciado-xs: 0.5rem;
     --espaciado-sm: 1rem;
