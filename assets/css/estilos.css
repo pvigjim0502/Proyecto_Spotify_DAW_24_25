@@ -30,32 +30,50 @@
 
 /* 3. Estilos base */
 body {
+    background-color: var(--fondo-body);
+    color: var(--color-texto-body);
+    display: flex;
+    flex-direction: column;
     font-family: var(--fuente-primaria);
     font-size: var(--tamano-fuente-base);
     line-height: var(--altura-linea-base);
-    background-color: var(--fondo-body);
-    color: var(--color-texto-body);
     margin: 0;
-    padding-top: 4rem;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    padding-top: 4rem;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
-    max-width: 1200px;
     margin: 0 auto;
+    max-width: 1200px;
     padding: var(--espaciado-md);
 }
 
-/* 4. Tipografía */
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+    opacity: 1;
+    font-weight: 400;
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+    opacity: 0.6;
+}
+
+input,
+textarea {
+    color: #ffffff !important;
+}
+
+/* 4. Tipografia */
 h1,
 .h1 {
+    color: var(--color-primario);
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: var(--espaciado-lg);
-    color: var(--color-primario);
     transition: color 0.3s ease;
 }
 
@@ -64,10 +82,15 @@ h1:hover,
     color: var(--color-primario-oscuro);
 }
 
-/* 5. Encabezado y navegación */
+h6 {
+    font-size: 1.1rem;
+}
+
+/* 5. Encabezado y navegacion */
 #cabecera {
     background-color: var(--fondo-header);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100 !important;
 }
 
 .navbar {
@@ -80,26 +103,30 @@ h1:hover,
 }
 
 .nav-link {
-    padding: var(--espaciado-xs) var(--espaciado-sm);
-    font-weight: 500;
-    transition: color 0.2s ease, background-color 0.2s ease;
-    margin: 0 3px;
     border-radius: 6px;
+    color: #B3B3B3;
+    font-weight: 500;
+    margin: 0 3px;
+    padding: var(--espaciado-xs) var(--espaciado-sm);
+    transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-link:hover {
+    background-color: rgba(29, 185, 84, 0.1);
     color: var(--color-primario) !important;
-    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .dropdown-menu {
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-    opacity: 0;
-    display: block;
-    visibility: hidden;
-    margin-top: 5px;
+    background-color: #212121;
+    border: none;
     border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    display: block;
+    margin-top: 5px;
+    opacity: 0;
     overflow: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    visibility: hidden;
 }
 
 .dropdown-menu.show {
@@ -107,34 +134,28 @@ h1:hover,
     visibility: visible;
 }
 
-.navbar-dark .navbar-nav .dropdown-menu {
-    background-color: var(--fondo-header);
-    border: none;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
 .navbar-dark .navbar-nav .dropdown-item {
-    color: #ffffff;
-    transition: color 0.3s ease, background-color 0.3s ease;
+    color: #FFFFFF;
     padding: 10px 16px;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .navbar-dark .navbar-nav .dropdown-item:hover {
-    color: #ffffff;
-    background-color: rgba(59, 130, 246, 0.2);
+    background-color: rgba(29, 185, 84, 0.2);
+    color: #FFFFFF;
 }
 
 body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-menu {
-    background-color: var(--fondo-body);
+    background-color: #212121;
 }
 
 body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item {
-    color: var(--color-texto-body);
+    color: #FFFFFF;
 }
 
 body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
+    background-color: rgba(29, 185, 84, 0.1);
     color: var(--color-primario);
-    background-color: rgba(59, 130, 246, 0.1);
 }
 
 /* 6. Contenido principal */
@@ -150,15 +171,17 @@ body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
 }
 
 #contenedorCanciones {
-    background-color: #f8fafc;
-    padding: 24px;
+    background-color: #181818;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 5px 10px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.1);
+    padding: 24px;
 }
 
 #listaCanciones .list-group-item {
+    background-color: transparent;
     border: none;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #2A2A2A;
+    color: #FFFFFF;
     padding: 14px 16px;
 }
 
@@ -171,33 +194,285 @@ body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
 }
 
 .cancion {
-    display: flex;
     align-items: center;
+    display: flex;
     justify-content: center;
-    text-align: center;
-    max-width: 200px;
     margin: var(--espaciado-xs) 0;
+    max-width: 200px;
+    text-align: center;
 }
 
-/* 7. Componentes de búsqueda */
-.search-input {
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-    background-color: var(--color-claro); /* Ajustar el fondo por si hay cambios en el tema */
-    color: var(--color-texto-body);
+table {
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    background-color: #121212;
+    color: #ffffff !important;
+    text-align: center;
 }
 
-.search-input:focus {
-    border-color: var(--color-primario);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    outline: none;
+td {
+    border-bottom: 1px solid #333333;
+    padding: 12px 15px;
+    vertical-align: middle;
+    text-align: center;
+    color: #ffffff !important;
 }
 
-/* Asegúrate de que el borde y color de fondo cambien en modo oscuro */
-body.dark-mode .search-input {
-    background-color: var(--color-oscuro);
-    border-color: #e2e8f0;
+.celda-album,
+.celda-artista {
+    color: #ffffff !important;
+    width: 15%;
+    text-align: center;
+}
+
+.celda-bio {
+    color: #ffffff !important;
+    width: 35%;
+    text-align: center;
+}
+
+.celda-duracion {
+    color: #a0a0a0;
+    text-align: center;
+    width: 10%;
+}
+
+.celda-fecha {
+    color: #a0a0a0;
+    width: 15%;
+}
+
+.celda-id {
     color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    width: 5%;
+}
+
+.celda-imagen {
+    text-align: center;
+    width: 10%;
+}
+
+.celda-nombre {
+    color: #ffffff;
+    font-weight: 600;
+    width: 20%;
+}
+
+.celda-pais {
+    color: #b3b3b3;
+    width: 15%;
+}
+
+.img-tabla {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    height: auto;
+    max-width: 80px !important;
+}
+
+tr {
+    background-color: #121212 !important;
+    transition: background-color 0.2s ease;
+}
+
+tr:hover {
+    background-color: #282828 !important;
+}
+
+/* 7. Componentes de busqueda */
+.search-input {
+    background-color: #2A2A2A !important;
+    border: 1px solid #535353;
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .search-input {
+    position: relative;
+    background-color: #2A2A2A !important;
+    border-color: #3A3A3A;
+    color: #FFFFFF;
+}
+
+#resultadosBusqueda {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border: none;
+    border-top: none;
+    z-index: 1000;
+    overflow-y: auto;
+    max-height: 400px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#resultadosBusqueda h6.text-light {
+    color: #b3b3b3 !important;
+    margin-top: 0;
+    padding: 8px 15px;
+    border-bottom: 1px solid #3A3A3A;
+}
+
+#resultadosBusqueda ul.list-unstyled {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+#resultadosBusqueda li.search-result-item {
+    padding: 8px 15px;
+    border-bottom: 1px solid #3A3A3A;
+}
+
+#resultadosBusqueda li.search-result-item:last-child {
+    border-bottom: none;
+}
+
+#resultadosBusqueda li.search-result-item a {
+    display: block;
+    padding: 8px 0;
+}
+
+#resultadosBusqueda li.search-result-item a:hover {
+    background-color: #333333;
+    border-radius: 4px;
+}
+
+#resultadosBusqueda .search-item-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+}
+
+#resultadosBusqueda .search-item-title {
+    color: #FFFFFF;
+    margin-bottom: 2px;
+}
+
+#resultadosBusqueda .search-item-subtitle {
+    color: #B3B3B3;
+    font-size: 0.9rem;
+}
+
+#resultadosBusqueda .search-album-link {
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+}
+
+#resultadosBusqueda .search-album-card {
+    background-color: transparent !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#resultadosBusqueda .search-album-card .card-img-top {
+    border-radius: 8px;
+}
+
+#resultadosBusqueda .search-album-card .card-body {
+    padding: 8px 0 !important;
+}
+
+#resultadosBusqueda .search-artist-link {
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#resultadosBusqueda .search-artist-image-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+#resultadosBusqueda .search-artist-link:hover p {
+    text-decoration: underline !important;
+}
+
+#resultadosBusqueda .text-muted {
+    color: #B3B3B3 !important;
+}
+
+#resultadosBusqueda .text-primary {
+    color: var(--color-primario) !important;
+}
+
+#resultadosBusqueda .text-center.text-light {
+    padding: 20px;
+}
+
+#resultadosBusqueda .row.g-2 {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+#resultadosBusqueda .row.g-2>div {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+body.dark-mode #resultadosBusqueda .list-group-flush .list-group-item {
+    background-color: #282828 !important;
+    color: #FFFFFF;
+}
+
+body.dark-mode #resultadosBusqueda .list-group-item {
+    background-color: #282828 !important;
+    color: #FFFFFF;
+}
+
+body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.border-0.py-2 {
+    background-color: #282828 !important;
+    color: #FFFFFF;
+}
+
+body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.border-0.py-2:hover {
+    background-color: #333333 !important;
+    color: #FFFFFF;
+}
+
+#buscador .card {
+    border: 1px solid #333333 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease;
+}
+
+#buscador .card:hover {
+    border-color: #444444 !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+#buscador .card:focus-within {
+    border-color: #1db954 !important;
+    box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.3) !important;
+}
+
+#buscar::placeholder {
+    color: #909090 !important;
+}
+
+#resultadosBusqueda {
+    border: 1px solid #333333 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+#contenedorResultados .list-group-item:hover {
+    background-color: #282828 !important;
+}
+
+#contenedorResultados .list-group-item.active {
+    background-color: #333333 !important;
+    border-left: 3px solid #1db954 !important;
 }
