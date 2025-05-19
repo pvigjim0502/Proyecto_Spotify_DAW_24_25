@@ -476,3 +476,29 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
     background-color: #333333 !important;
     border-left: 3px solid #1db954 !important;
 }
+
+/* 8. Tarjetas */
+.card {
+    background-color: #181818;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    background-color: #212121;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.card-body {
+    padding: var(--espaciado-lg);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid #2A2A2A;
+    padding: var(--espaciado-md);
+}
