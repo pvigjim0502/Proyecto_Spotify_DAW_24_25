@@ -189,6 +189,7 @@ async function cargarMiPerfil(evento) {
     document.getElementById('contenidoAdministracion').style.display = 'none';
     crearCookie('ultimaPagina', 'perfil', 7);
 
+    // mostrar al usuario en la pagina de mi perfil sus datos
     try {
         var respuesta = await fetch('controladores/ObtenerPerfilControlador.php');
         var datosPerfil = await respuesta.json();
