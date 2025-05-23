@@ -178,3 +178,27 @@ async function cargarMenu() {
         console.error('Error al cargar el menú:', error);
     }
 }
+
+async function cargarMiPerfil(evento) {
+    if (evento) {
+        evento.preventDefault();
+    }
+
+    document.getElementById('pagina-inicio').style.display = 'none';
+    document.getElementById('contenidoPerfil').style.display = 'block';
+    document.getElementById('contenidoAdministracion').style.display = 'none';
+    crearCookie('ultimaPagina', 'perfil', 7);
+
+    try {
+        var respuesta = await fetch('controladores/ObtenerPerfilControlador.php');
+        var datosPerfil = await respuesta.json();
+        
+        document.getElementById('perfil-usuario-nombre').innerText = datosPerfil.usuario.nombreUsuario;
+        document.getElementById('perfil-rol').innerText = datosPerfil.usuario.rol;
+        document.getElementById('perfil-email').innerText = datosPerfil.usuario.email;
+        document.getElementById('perfil-fecha-registro').innerText = datosPerfil.usuario.fechaRegistro;
+
+    } catch (error) {
+        mostrarToast('error al cargar el perfil', 'error');
+    }
+}
