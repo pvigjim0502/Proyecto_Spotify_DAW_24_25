@@ -159,3 +159,22 @@ function enviarCorreoRecuperacion() {
             document.getElementById('mensaje-error-recuperacion').textContent = 'Error de red o servidor: ' + error.message;
         });
 }
+
+async function cargarMenu() {
+    try {
+        const respuesta = await fetch('./controladores/ObtenerMenuControlador.php');
+
+        const datos = await respuesta.json();
+        const adminItem = document.getElementById('admin-nav-item');
+
+        // si es administrador, se muestra la opcion de poder administrar la pagina o no en el otro caso
+        if (datos.esAdmin) {
+            adminItem.style.display = 'block';
+        } else {
+            adminItem.style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error('Error al cargar el menú:', error);
+    }
+}
