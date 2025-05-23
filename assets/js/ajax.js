@@ -203,3 +203,21 @@ async function cargarMiPerfil(evento) {
         mostrarToast('error al cargar el perfil', 'error');
     }
 }
+
+async function obtenerDatos(url) {
+    try {
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+        
+        if (Array.isArray(datos.data)) {
+            return datos.data;
+        } else {
+            return [];
+        }
+        
+    } catch (error) {
+        console.error('Error en obtenerDatos:', error);
+        mostrarToast(error.message, 'error');
+        return [];
+    }
+}
