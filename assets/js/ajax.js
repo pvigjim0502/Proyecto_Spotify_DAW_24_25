@@ -315,3 +315,46 @@ async function cargarAlbumesAdmin() {
         mostrarToast(error.message, 'error');
     }
 }
+
+async function cargarCancionesAdmin() {
+    try {
+        // conseguir la informacion de las canciones
+        const canciones = await obtenerDatos('./controladores/AdministrarControlador.php?accion=obtener_canciones');
+
+        // titulos de la tabla
+        const headers = ['ID', 'Nombre', 'Duración', 'Álbum', 'Imagen'];
+
+        const tabla = crearTabla(headers, canciones, function (fila, cancion) {
+            const celdaId = document.createElement('td');
+            celdaId.textContent = cancion.CODCANCION;
+            celdaId.className = 'celda-id';
+            fila.appendChild(celdaId);
+
+            const celdaNombre = document.createElement('td');
+            celdaNombre.textContent = cancion.NOMBRE;
+            celdaNombre.className = 'celda-nombre';
+            fila.appendChild(celdaNombre);
+
+            const celdaDuracion = document.createElement('td');
+            celdaDuracion.textContent = cancion.DURACION;
+            celdaDuracion.className = 'celda-duracion';
+            fila.appendChild(celdaDuracion);
+
+            const celdaAlbum = document.createElement('td');
+            celdaAlbum.textContent = cancion.NOMBRE_ALBUM;
+            celdaAlbum.className = 'celda-album';
+            fila.appendChild(celdaAlbum);
+
+            // la de las imagenes
+            const celdaImagen = document.createElement('td');
+            const rutaImagen = cancion.IMAGEN;
+            celdaImagen.innerHTML = '<img src="' + rutaImagen + '" class="img-tabla">';
+            celdaImagen.className = 'celda-imagen';
+            fila.appendChild(celdaImagen);
+        });
+
+        mostrarTabla('listaCancionesAdmin', tabla);
+    } catch (error) {
+        mostrarToast(error.message, 'error');
+    }
+}
