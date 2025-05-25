@@ -221,3 +221,56 @@ async function obtenerDatos(url) {
         return [];
     }
 }
+
+async function cargarArtistasAdmin() {
+    try {
+        // conseguir la informacion de los artistas
+        const artistas = await obtenerDatos('./controladores/AdministrarControlador.php?accion=obtener_artistas');
+
+        // titulos de la tabla
+        const headers = ['ID', 'Nombre', 'Biografía', 'Fecha de Nacimiento', 'País de Origen', 'Imagen'];
+
+        const tabla = crearTabla(headers, artistas, function (fila, artista) {
+            // hacer la celda del id
+            const celdaId = document.createElement('td');
+            celdaId.textContent = artista.CODARTISTA;
+            celdaId.className = 'celda-id';
+            fila.appendChild(celdaId);
+
+            // hacer la celda del nombre
+            const celdaNombre = document.createElement('td');
+            celdaNombre.textContent = artista.NOMBRE;
+            celdaNombre.className = 'celda-nombre';
+            fila.appendChild(celdaNombre);
+
+            // hacer la celda de la biografia
+            const celdaBio = document.createElement('td');
+            celdaBio.textContent = artista.BIOGRAFIA || 'Sin biografía';
+            celdaBio.className = 'celda-bio';
+            fila.appendChild(celdaBio);
+
+            // hacer la celda de la fecha de nacimiento
+            const celdaFecha = document.createElement('td');
+            celdaFecha.textContent = artista.FECHA_NACIMIENTO;
+            celdaFecha.className = 'celda-fecha';
+            fila.appendChild(celdaFecha);
+
+            // hacer la celda del pais de origen
+            const celdaPais = document.createElement('td');
+            celdaPais.textContent = artista.PAIS_ORIGEN;
+            celdaPais.className = 'celda-pais';
+            fila.appendChild(celdaPais);
+
+            // hacer la celda de la imagen
+            const celdaImagen = document.createElement('td');
+            celdaImagen.innerHTML = '<img src="' + artista.IMAGEN + '" class="img-tabla">';
+            celdaImagen.className = 'celda-imagen';
+            fila.appendChild(celdaImagen);
+        });
+
+        mostrarTabla('listaArtistasAdmin', tabla);
+    } catch (error) {
+        console.log(error);
+        mostrarToast(error.message, 'error');
+    }
+}
