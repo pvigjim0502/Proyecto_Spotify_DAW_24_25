@@ -393,3 +393,48 @@ function irAtras() {
     document.getElementById('contenedorArtistas').style.display = 'flex';
     document.getElementById('buscador').style.display = 'flex';
 }
+
+// funcion para crear una tabla con datos
+function crearTabla(headers, data, renderRow) {
+    // creo la tabla
+    var tabla = document.createElement('table');
+    tabla.className = 'table table-bordered table-striped';
+
+    // creo la cabecera
+    var thead = document.createElement('thead');
+    var headerRow = document.createElement('tr');
+
+    // añado cada texto de cabecera
+    for (var i = 0; i < headers.length; i++) {
+        var th = document.createElement('th');
+        th.textContent = headers[i];
+        headerRow.appendChild(th);
+    }
+
+    thead.appendChild(headerRow);
+    tabla.appendChild(thead);
+
+    // creo el cuerpo de la tabla
+    var tbody = document.createElement('tbody');
+
+    // para cada elemento de datos, creo una fila
+    for (var j = 0; j < data.length; j++) {
+        var row = document.createElement('tr');
+        renderRow(row, data[j]);
+        tbody.appendChild(row);
+    }
+
+    tabla.appendChild(tbody);
+
+    return tabla;
+}
+
+// funcion para mostrar una tabla en un contenedor
+function mostrarTabla(contenedorId, tabla) {
+    // busco el contenedor y limpio su contenido
+    var contenedor = document.getElementById(contenedorId);
+    contenedor.innerHTML = '';
+
+    // añado la tabla al contenedor
+    contenedor.appendChild(tabla);
+}
