@@ -144,3 +144,252 @@ function mostrarAlbumes(albums) {
         swiperElement.style.height = '100%';
     }
 }
+
+// guardamos el id del album que estamos viendo
+var albumSeleccionadoId = 0;
+
+// funcion para mostrar el detalle de un album con sus canciones
+function mostrarDetalleAlbum(album) {
+    var contenedorCanciones = document.getElementById('contenedorCanciones');
+    var contenedorAlbum = document.getElementById('contenedorAlbum');
+    var contenedorArtistas = document.getElementById('contenedorArtistas');
+    var buscador = document.getElementById('buscador');
+
+    // ajustamos los estilos del contenedor
+    contenedorCanciones.className = 'container-fluid p-0';
+    document.body.style.backgroundColor = 'var(--fondo-body)';
+
+    // creamos el encabezado con los datos del album
+    var htmlCabecera = `
+        <div class="position-relative mb-5">
+            <div class="position-absolute w-100 h-100" style="
+                background: linear-gradient(to bottom, rgba(0,0,0,0.7), var(--fondo-body)),
+                url('${album.CARATULA}') no-repeat center center;
+                background-size: cover;
+                filter: blur(8px);
+                z-index: 0;
+            "></div>
+            <div class="container-fluid position-relative py-5" style="z-index: 1;">
+                <div class="d-flex justify-content-between align-items-center mb-5 px-4">
+                    <button class="btn btn-outline-light rounded-pill px-4" onclick="irAtras()">
+                        <i class="fas fa-arrow-left me-2"></i>Volver atrás
+                    </button>
+                    <div class="badge rounded-pill px-4 py-2" style="background-color: var(--color-primario); color: var(--color-claro);">
+                        <i class="fas fa-music me-2"></i>${album.canciones ? album.canciones.length : 0} canciones
+                    </div>
+                </div>
+                <div class="row align-items-center g-5 px-4">
+                    <div class="col-lg-4">
+                        <img id="albumCaratula"
+                             src="${album.CARATULA}"
+                             class="img-fluid rounded-4 shadow-lg"
+                             alt="${album.NOMBRE}"
+                             style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
+                    </div>
+                    <div class="col-lg-8" style="color: var(--color-texto-body);">
+                        <h1 class="display-4 fw-bold mb-3">${album.NOMBRE}</h1>
+                        <div class="d-flex align-items-center gap-4 mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-circle fs-1 me-3" style="color: var(--color-secundario);"></i>
+                                <div>
+                                    <p class="mb-0" style="color: var(--color-secundario);">Artista</p>
+                                    <h2 class="h4 mb-0">${album.ARTISTA || 'Anónimo'}</h2>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar-alt fs-1 me-3" style="color: var(--color-secundario);"></i>
+                                <div>
+                                    <p class="mb-0" style="color: var(--color-secundario);">Lanzamiento</p>
+                                    <h2 class="h4 mb-0">${album.FECHA_LANZAMIENTO}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="lead mb-4">${album.BIOGRAFIA || 'Biografía no disponible'}</p>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    // creamos el contenido principal con la lista de canciones
+    var htmlContenidoPrincipal = `
+        <div class="container-fluid px-4 pb-5">
+            <div class="grid-container">
+                <div class="canciones-col">
+                    <div class="card shadow-lg rounded-4 border-0 overflow-hidden" style="background-color: transparent;">
+                        <div class="card-header bg-transparent border-0 p-4 pb-2">
+                            <h3 class="h4 fw-bold mb-0 pb-2 d-inline-block" style="color: var(--color-texto-body); border-bottom: 3px solid var(--color-primario) !important;">Lista de canciones</h3>
+                        </div>
+                        <div class="card-body p-0">`;
+
+    // agregamos cada cancion a la lista
+    if (album.canciones && album.canciones.length > 0) {
+        for (var i = 0; i < album.canciones.length; i++) {
+            var cancion = album.canciones[i];
+
+            // formateamos el numero
+            var numero = i + 1;
+            var numeroFormateado = '';
+            if (numero < 10) {
+                numeroFormateado = '0' + numero;
+            } else {
+                numeroFormateado = '' + numero;
+            }
+
+            // reemplazamos los _ por espacios sin usar replace
+            var nombreCancion = cancion.NOMBRE.split('_').join(' ');
+
+            htmlContenidoPrincipal += `
+            <div class="d-flex align-items-center p-4 border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+                <div class="d-flex align-items-center w-100 gap-3">
+                    <span class="h5 fw-bold mb-0 text-center" style="color: var(--color-secundario); width: 40px; font-family: var(--bs-font-monospace);">
+                        ${numeroFormateado}
+                    </span>
+
+                    <img src="${cancion.IMAGEN}"
+                        alt="${nombreCancion}"
+                        class="rounded-3 shadow-sm flex-shrink-0"
+                        style="width: 64px; height: 64px; object-fit: cover;">
+
+                    <div class="text-truncate" style="width: 30%; min-width: 150px;">
+                        <h4 class="h6 fw-bold mb-1 text-truncate" style="color: var(--color-texto-body);">${nombreCancion}</h4>
+                        <p class="small mb-0" style="color: var(--color-secundario);">Pista ${i + 1}</p>
+                    </div>
+
+                    <div class="flex-grow-1 ms-3" style="min-width: 200px; max-width: 500px;">
+                        <audio id="audio-${i}"
+                            class="w-100 rounded-pill"
+                            controls
+                            style="background-color: rgba(255,255,255,0.1);">
+                            <source src="${cancion.AUDIO}" type="audio/mp3">
+                        </audio>
+                    </div>
+                </div>
+            </div>`;
+        }
+    } else {
+        // mensaje si no hay canciones
+        htmlContenidoPrincipal += `
+            <div class="alert m-4" style="background-color: rgba(29, 185, 84, 0.1); color: var(--color-primario); border-radius: 1rem;">
+                <div class="text-center py-5">
+                    <i class="fas fa-exclamation-circle fs-1 mb-4 opacity-75"></i>
+                    <h2 class="fw-bold mb-3" style="color: var(--color-texto-body);">No hay canciones disponibles</h2>
+                    <p class="lead opacity-75 mb-0" style="color: var(--color-secundario);">Este álbum no tiene canciones registradas.</p>
+                </div>
+            </div>`;
+    }
+
+    // terminamos el html del contenido principal
+    htmlContenidoPrincipal += `
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artista-col">
+                    <div class="card shadow-lg rounded-4 border-0 mb-4">
+                        <div class="card-header border-0 p-4" style="background: linear-gradient(to right, var(--color-primario), transparent 100%);">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="h4 fw-bold mb-0" style="color: var(--color-texto-body);">Perfil del artista</h3>
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(29, 185, 84, 0.2); color: var(--color-primario);">Verificado</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-4">
+                                <img src="${album.IMAGEN_ARTISTA || 'assets/img/default-artist.jpg'}"
+                                     alt="${album.ARTISTA || 'Artista'}"
+                                     class="img-fluid shadow-sm me-4"
+                                     style="width: 120px; height: 120px; object-fit: cover; border-radius: 12px;">
+                                <div>
+                                    <h4 class="h5 fw-bold mb-1" style="color: var(--color-texto-body);">${album.ARTISTA || 'Anónimo'}</h4>
+                                </div>
+                            </div>
+
+
+                            <div class="row row-cols-1 g-3 mb-4">
+                                <div class="col">
+                                    <div class="d-flex align-items-center p-3 rounded-4" style="background-color: rgba(255,255,255,0.05);">
+                                        <div class="p-3 rounded-3 me-3" style="background-color: rgba(29, 185, 84, 0.1);">
+                                            <i class="fas fa-globe fs-5" style="color: var(--color-primario);"></i>
+                                        </div>
+                                        <div>
+                                            <p class="small mb-0" style="color: var(--color-secundario);">País de origen</p>
+                                            <h5 class="fw-bold mb-0" style="color: var(--color-texto-body);">${album.PAIS_ORIGEN || 'No disponible'}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="d-flex align-items-center p-3 rounded-4" style="background-color: rgba(255,255,255,0.05);">
+                                        <div class="p-3 rounded-3 me-3" style="background-color: rgba(29, 185, 84, 0.1);">
+                                            <i class="fas fa-calendar-day fs-5" style="color: var(--color-primario);"></i>
+                                        </div>
+                                        <div>
+                                            <p class="small mb-0" style="color: var(--color-secundario);">Fecha de nacimiento</p>
+                                            <h5 class="fw-bold mb-0" style="color: var(--color-texto-body);">${album.FECHA_NACIMIENTO || 'No disponible'}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comentarios-col">
+                    <div class="card shadow-lg rounded-4 border-0" style="background-color: transparent;">
+                        <div class="card-header border-0 p-4">
+                            <h3 class="h4 fw-bold mb-0" style="color: var(--color-texto-body);">Comentarios</h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div id="listaComentarios" class="mb-4">
+                                <div class="comment-placeholder-animation">
+                                    <div class="placeholder-glow mb-4">
+                                        <div class="d-flex mb-3">
+                                            <div class="placeholder col-2 rounded-circle me-3" style="height: 45px; background-color: rgba(255,255,255,0.1);"></div>
+                                            <div class="flex-grow-1">
+                                                <div class="placeholder col-4 mb-2" style="background-color: rgba(255,255,255,0.1);"></div>
+                                                <div class="placeholder col-12 mb-2" style="background-color: rgba(255,255,255,0.1);"></div>
+                                                <div class="placeholder col-8" style="background-color: rgba(255,255,255,0.1);"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-top pt-4" style="border-color: rgba(255,255,255,0.1) !important;">
+                                <div class="d-flex align-items-start">
+                                    <img src="assets/img/usuario/usuario.png" class="rounded-circle me-3" style="width: 45px; height: 45px; object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <textarea id="comentarioInput"
+                                                  class="form-control mb-2"
+                                                  rows="3"
+                                                  style="background-color: rgba(255,255,255,0.1); color: var(--color-texto-body); border: none;"></textarea>
+                                        <div class="text-end">
+                                            <button class="btn rounded-pill px-4" onclick="publicarComentario()" style="background-color: var(--color-primario); color: var(--color-claro);">
+                                                <i class="fas fa-paper-plane me-2"></i>Publicar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    // unimos el encabezado y el contenido principal
+    contenedorCanciones.innerHTML = htmlCabecera + htmlContenidoPrincipal;
+    cargarComentarios(albumSeleccionadoId);
+
+    // mostramos solo la seccion de canciones
+    contenedorCanciones.style.display = 'block';
+    contenedorAlbum.style.display = 'none';
+    contenedorArtistas.style.display = 'none';
+    buscador.style.display = 'none';
+}
+
+// funcion para volver a la pagina anterior
+function irAtras() {
+    document.getElementById('contenedorCanciones').style.display = 'none';
+    document.getElementById('contenedorAlbum').style.display = 'flex';
+    document.getElementById('contenedorArtistas').style.display = 'flex';
+    document.getElementById('buscador').style.display = 'flex';
+}
