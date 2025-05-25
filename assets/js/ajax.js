@@ -274,3 +274,44 @@ async function cargarArtistasAdmin() {
         mostrarToast(error.message, 'error');
     }
 }
+
+async function cargarAlbumesAdmin() {
+    try {
+        // conseguir la informacion de los albumes
+        const albumes = await obtenerDatos('./controladores/AdministrarControlador.php?accion=obtener_albumes');
+
+        // titulos de la tabla
+        const headers = ['ID', 'Nombre', 'Artista', 'Fecha de Lanzamiento', 'Carátula'];
+
+        const tabla = crearTabla(headers, albumes, function (fila, album) {
+            const celdaId = document.createElement('td');
+            celdaId.textContent = album.CODALBUM;
+            celdaId.className = 'celda-id';
+            fila.appendChild(celdaId);
+
+            const celdaNombre = document.createElement('td');
+            celdaNombre.textContent = album.NOMBRE;
+            celdaNombre.className = 'celda-nombre';
+            fila.appendChild(celdaNombre);
+
+            const celdaArtista = document.createElement('td');
+            celdaArtista.textContent = album.ARTISTA;
+            celdaArtista.className = 'celda-artista';
+            fila.appendChild(celdaArtista);
+
+            const celdaFecha = document.createElement('td');
+            celdaFecha.textContent = album.FECHA_LANZAMIENTO;
+            celdaFecha.className = 'celda-fecha';
+            fila.appendChild(celdaFecha);
+
+            const celdaImagen = document.createElement('td');
+            celdaImagen.innerHTML = '<img src="' + album.CARATULA + '" class="img-tabla">';
+            celdaImagen.className = 'celda-imagen';
+            fila.appendChild(celdaImagen);
+        });
+
+        mostrarTabla('listaAlbumesAdmin', tabla);
+    } catch (error) {
+        mostrarToast(error.message, 'error');
+    }
+}
