@@ -395,7 +395,7 @@ function irAtras() {
 }
 
 // funcion para crear una tabla con datos
-function crearTabla(headers, data, renderRow) {
+function crearTabla(titulos, data, dibujarFila) {
     // creo la tabla
     var tabla = document.createElement('table');
     tabla.className = 'table table-bordered table-striped';
@@ -405,9 +405,9 @@ function crearTabla(headers, data, renderRow) {
     var headerRow = document.createElement('tr');
 
     // añado cada texto de cabecera
-    for (var i = 0; i < headers.length; i++) {
+    for (var i = 0; i < titulos.length; i++) {
         var th = document.createElement('th');
-        th.textContent = headers[i];
+        th.textContent = titulos[i];
         headerRow.appendChild(th);
     }
 
@@ -419,9 +419,9 @@ function crearTabla(headers, data, renderRow) {
 
     // para cada elemento de datos, creo una fila
     for (var j = 0; j < data.length; j++) {
-        var row = document.createElement('tr');
-        renderRow(row, data[j]);
-        tbody.appendChild(row);
+        var fila = document.createElement('tr');
+        dibujarFila(fila, data[j]);
+        tbody.appendChild(fila);
     }
 
     tabla.appendChild(tbody);
