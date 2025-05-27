@@ -437,3 +437,41 @@ async function llenarSelectAlbumes() {
 }
 
 llenarSelectAlbumes();
+
+async function llenarSelectArtistas() {
+    const selects = [
+        document.getElementById('artistaAlbum'),
+        document.getElementById('artistaAlbumModificar'),
+        document.getElementById('selectArtistaModificar')
+    ];
+
+    try {
+        const artistas = await obtenerDatos('./controladores/AdministrarControlador.php?accion=obtener_artistas');
+
+        selects.forEach(select => {
+            if (select) {
+                select.innerHTML = '';
+
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Seleccione un artista';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
+
+                // añadir artistas al select
+                artistas.forEach(artista => {
+                    const option = document.createElement('option');
+                    option.value = artista.CODARTISTA;
+                    option.textContent = artista.NOMBRE;
+                    select.appendChild(option);
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error al cargar los artistas:', error);
+        mostrarToast(error.message, 'error');
+    }
+}
+
+llenarSelectArtistas();
