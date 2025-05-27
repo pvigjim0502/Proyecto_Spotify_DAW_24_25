@@ -439,6 +439,16 @@ function mostrarTabla(contenedorId, tabla) {
     contenedor.appendChild(tabla);
 }
 
+// funcion para mostrar una tabla en un contenedor
+function mostrarTabla(contenedorId, tabla) {
+    // busco el contenedor y limpio su contenido
+    var contenedor = document.getElementById(contenedorId);
+    contenedor.innerHTML = '';
+
+    // añado la tabla al contenedor
+    contenedor.appendChild(tabla);
+}
+
 // funcion para cargar la pagina de inicio
 function cargarInicio(evento) {
     // si hay un evento, lo detengo
