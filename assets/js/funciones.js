@@ -438,3 +438,30 @@ function mostrarTabla(contenedorId, tabla) {
     // añado la tabla al contenedor
     contenedor.appendChild(tabla);
 }
+
+// funcion para cargar la pagina de inicio
+function cargarInicio(evento) {
+    // si hay un evento, lo detengo
+    if (evento) {
+        evento.preventDefault();
+    }
+
+    // oculto y muestro las secciones necesarias
+    document.getElementById('contenidoPerfil').style.display = 'none';
+    document.getElementById('pagina-inicio').style.display = 'block';
+    document.getElementById('contenedorCanciones').style.display = 'none';
+    document.getElementById('contenedorArtistas').style.display = 'block';
+    document.getElementById('contenidoAdministracion').style.display = 'none'
+
+    // cargo la musica
+    cargarMusica();
+
+    // si existe el contenedor de musica y esta visible, me aseguro que siga visible
+    var contenedorMusica = document.getElementById('contenedor-musica');
+    if (contenedorMusica && contenedorMusica.style.display === 'block') {
+        contenedorMusica.style.display = 'block';
+    }
+
+    // guardo la ultima pagina visitada en una cookie
+    crearCookie('ultimaPagina', 'inicio', 7);
+}
