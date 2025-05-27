@@ -358,3 +358,42 @@ async function cargarCancionesAdmin() {
         mostrarToast(error.message, 'error');
     }
 }
+
+async function llenarSelectCanciones() {
+    const selects = [
+        document.getElementById('cancionEliminar'),
+        document.getElementById('selectCancionModificar')
+    ];
+
+    try {
+        // Obtener el array de canciones
+        const canciones = await obtenerDatos(
+            './controladores/AdministrarControlador.php?accion=obtener_canciones'
+        );
+
+        selects.forEach(select => {
+            if (!select) return;
+
+            // Limpia y añade opción por defecto
+            select.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Seleccione una canción';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            select.appendChild(defaultOption);
+
+            // Rellena con las canciones
+            canciones.forEach(cancion => {
+                const option = document.createElement('option');
+                option.value = cancion.CODCANCION;
+                option.textContent = cancion.NOMBRE;
+                option.dataset.albumId = cancion.CODALBUM;
+                select.appendChild(option);
+            });
+        });
+    } catch (error) {
+        console.error('Error al cargar las canciones:', error);
+        mostrarToast(error.message, 'error');
+    }
+}
