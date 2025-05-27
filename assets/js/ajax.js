@@ -397,3 +397,43 @@ async function llenarSelectCanciones() {
         mostrarToast(error.message, 'error');
     }
 }
+
+async function llenarSelectAlbumes() {
+    const selects = [
+        document.getElementById('albumSeleccionado'),
+        document.getElementById('cancionAlbum'),
+        document.getElementById('albumModificar'),
+        document.getElementById('albumEliminar')
+    ];
+
+    try {
+        const albumes = await obtenerDatos('./controladores/AdministrarControlador.php?accion=obtener_albumes');
+
+        selects.forEach(select => {
+            if (!select) return;
+
+            select.innerHTML = ''; // Limpiar los valores existentes
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Seleccione un álbum';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            select.appendChild(defaultOption);
+
+            // Si los álbumes existen, llenar los selects
+            albumes.forEach(album => {
+                const option = document.createElement('option');
+                option.value = album.CODALBUM;
+                option.textContent = album.NOMBRE;
+                select.appendChild(option);
+            });
+        });
+
+    } catch (error) {
+        console.error('Error al cargar los álbumes:', error);
+        mostrarToast(error.message, 'error');
+    }
+}
+
+llenarSelectAlbumes();
