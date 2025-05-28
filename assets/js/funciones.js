@@ -537,3 +537,11 @@ function mostrarFormulario(formulario) {
             break;
     }
 }
+
+// funcion para cargar la seccion de administracion
+function cargarAdministracion() {
+    // oculto y muestro las secciones necesarias
+    document.getElementById('pagina-inicio').style.display = 'none';
+    document.getElementById('contenidoPerfil').style.display = 'none';
+    document.getElementById('contenidoAdministracion').style.display = 'block';
+}
