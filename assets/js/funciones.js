@@ -475,3 +475,65 @@ function cargarInicio(evento) {
     // guardo la ultima pagina visitada en una cookie
     crearCookie('ultimaPagina', 'inicio', 7);
 }
+
+// funcion para mostrar el formulario seleccionado
+function mostrarFormulario(formulario) {
+    // primero oculto todos los formularios
+    var formularios = document.querySelectorAll('.formularioSeccion');
+    for (var i = 0; i < formularios.length; i++) {
+        formularios[i].style.display = 'none';
+    }
+
+    // muestro el formulario seleccionado
+    switch (formulario) {
+        case 'añadirCancion':
+            document.getElementById('formularioAñadirCancion').style.display = 'block';
+            cargarAlbumesAdmin();
+            break;
+        case 'modificarCancion':
+            document.getElementById('formularioModificarCancion').style.display = 'block';
+            llenarSelectCanciones();
+            llenarSelectAlbumes();
+            break;
+        case 'eliminarCancion':
+            document.getElementById('formularioEliminarCancion').style.display = 'block';
+            cargarCancionesAdmin();
+            break;
+        case 'añadirAlbum':
+            document.getElementById('formularioAñadirAlbum').style.display = 'block';
+            llenarSelectArtistas();
+            break;
+        case 'eliminarAlbum':
+            document.getElementById('formularioEliminarAlbum').style.display = 'block';
+            cargarAlbumesAdmin();
+            break;
+        case 'modificarAlbum':
+            document.getElementById('formularioModificarAlbum').style.display = 'block';
+            cargarAlbumesAdmin();
+            llenarSelectArtistas();
+            break;
+        case 'añadirArtista':
+            document.getElementById('formularioAñadirArtista').style.display = 'block';
+            break;
+        case 'modificarArtista':
+            document.getElementById('formularioModificarArtista').style.display = 'block';
+            llenarSelectArtistas();
+            break;
+        case 'eliminarArtista':
+            document.getElementById('formularioEliminarArtista').style.display = 'block';
+            cargarArtistasParaEliminar();
+            break;
+        case 'mostrarArtistas':
+            document.getElementById('formularioMostrarArtistas').style.display = 'block';
+            cargarArtistasAdmin();
+            break;
+        case 'mostrarAlbumes':
+            document.getElementById('formularioMostrarAlbumes').style.display = 'block';
+            cargarAlbumesAdmin();
+            break;
+        case 'mostrarCanciones':
+            document.getElementById('formularioMostrarCanciones').style.display = 'block';
+            cargarCancionesAdmin();
+            break;
+    }
+}
