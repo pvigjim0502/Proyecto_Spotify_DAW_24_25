@@ -569,3 +569,83 @@ async function eliminarCancion(evento) {
         mostrarToast('Error al eliminar la canción: ' + error.message, 'error');
     }
 }
+
+async function modificarCancion(evento) {
+    evento.preventDefault();
+
+    const selectorCancion = document.getElementById('selectCancionModificar');
+    const campoNombre = document.getElementById('nombreCancionModificar');
+    const campoDuracion = document.getElementById('duracionCancionModificar');
+    const campoAudio = document.getElementById('audioCancionModificar');
+    const campoImagen = document.getElementById('imagenCancionModificar');
+    const formulario = document.getElementById('form-modificar-cancion');
+
+    try {
+        const idCancion = selectorCancion.value;
+        const nombre = campoNombre.value.trim();
+        const duracion = campoDuracion.value;
+
+        // si faltan datos obligatorios se muestra un mensaje
+        if (!idCancion || !nombre || !duracion) {
+            mostrarToast('Faltan datos obligatorios', 'error');
+            return;
+        }
+
+        const datosFormulario = new FormData(formulario);
+        datosFormulario.set('accion', 'modificar_cancion');
+        datosFormulario.set('id', idCancion);
+        datosFormulario.set('nombre', nombre);
+        datosFormulario.set('duracion', duracion);
+
+        // si hay audio se agrega al formulario
+        if (campoAudio.files.length > 0) {
+            const archivoAudio = campoAudio.files[0];
+            if (archivoAudio.type.startsWith('audio/')) {
+                datosFormulario.set('archivo_audio', archivoAudio);
+            } else {
+                mostrarToast('El archivo de audio no es válido', 'error');
+                return;
+            }
+        }
+
+        // si hay imagen se agrega al formulario
+        if (campoImagen.files.length > 0) {
+            const archivoImagen = campoImagen.files[0];
+            if (archivoImagen.type.startsWith('image/')) {
+                datosFormulario.set('imagen', archivoImagen);
+            } else {
+                mostrarToast('La imagen no es válida', 'error');
+                return;
+            }
+        }
+
+        mostrarToast('Modificando canción...', 'info');
+
+        const respuesta = await fetch('./controladores/AdministrarControlador.php', {
+            method: 'POST',
+            body: datosFormulario
+        });
+
+        const textoPlano = await respuesta.text();
+        let datos;
+
+        try {
+            datos = JSON.parse(textoPlano);
+        } catch (error) {
+            mostrarToast('La respuesta del servidor no es válida', 'error');
+            return;
+        }
+
+        // si todo sale bien se muestra un mensaje
+        if (datos.exito) {
+            mostrarToast('Canción modificada correctamente', 'exito');
+            formulario.reset();
+            llenarSelectCanciones();
+        } else {
+            mostrarToast('Error: ' + datos.mensaje, 'error');
+        }
+
+    } catch (error) {
+        mostrarToast('Error: ' + error.message, 'error');
+    }
+}
