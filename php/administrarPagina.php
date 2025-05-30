@@ -381,3 +381,133 @@
                     </form>
                 </div>
             </div>
+
+                <div id="formularioAñadirArtista" class="card shadow-lg border-0 mb-4 formularioSeccion"
+                style="display: none; border-radius: 8px;">
+                <div class="card-header py-3"
+                    style="background-color: #1DB954; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                    <h4 class="card-title mb-0 text-center text-white">Añadir Nuevo Artista</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form id="form-añadir-artista" onsubmit="return crearArtista(event)" class="row g-4"
+                        enctype="multipart/form-data">
+                        <div class="col-12">
+                            <label for="nombreArtista" class="form-label" style="color: #FFFFFF;">Nombre del
+                                Artista</label>
+                            <input type="text" class="form-control form-control-lg" id="nombreArtista" name="nombre"
+                                required
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="biografiaArtista" class="form-label" style="color: #FFFFFF;">Biografía del
+                                Artista</label>
+                            <textarea class="form-control form-control-lg" id="biografiaArtista" name="biografia"
+                                rows="4"
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="fechaNacimientoArtista" class="form-label" style="color: #FFFFFF;">Fecha de
+                                Nacimiento</label>
+                            <input type="date" class="form-control form-control-lg" id="fechaNacimientoArtista"
+                                name="fecha_nacimiento"
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="paisOrigenArtista" class="form-label" style="color: #FFFFFF;">País de
+                                Origen</label>
+                            <input type="text" class="form-control form-control-lg" id="paisOrigenArtista"
+                                name="pais_origen"
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="imagenArtista" class="form-label" style="color: #FFFFFF;">Imagen del Artista
+                                (Opcional)</label>
+                            <input type="file" class="form-control form-control-lg" id="imagenArtista" name="imagen"
+                                accept="image/*"
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-lg px-5"
+                                style="background-color: #1DB954; color: white; border-radius: 30px; font-weight: 600; transition: all 0.3s ease;">
+                                Añadir Artista
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="formularioAñadirAlbum" class="card shadow-lg border-0 mb-4 formularioSeccion"
+                style="display: none; border-radius: 8px;">
+                <div class="card-header py-3"
+                    style="background-color: #1DB954; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                    <h4 class="card-title mb-0 text-center text-white">Añadir Nuevo Álbum</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form id="form-album" onsubmit="return añadirAlbum(event)" method="POST"
+                        enctype="multipart/form-data" class="row g-4">
+                        <div class="col-md-12">
+                            <label for="albumNombre" class="form-label" style="color: #FFFFFF;">Nombre del Álbum</label>
+                            <input type="text" id="albumNombre" name="albumNombre" class="form-control form-control-lg"
+                                required
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="artistaAlbum" class="form-label" style="color: #FFFFFF;">Artista</label>
+                            <select id="artistaAlbum" name="artistaAlbum" class="form-select form-select-lg" required
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                                <option value="" disabled selected>Seleccione un artista</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="albumFechaLanzamiento" class="form-label" style="color: #FFFFFF;">Fecha de
+                                Lanzamiento</label>
+                            <input type="date" id="albumFechaLanzamiento" name="albumFechaLanzamiento"
+                                class="form-control form-control-lg" required
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="albumImagen" class="form-label" style="color: #FFFFFF;">Carátula del
+                                Álbum</label>
+                            <input type="file" id="albumImagen" name="albumImagen" class="form-control form-control-lg"
+                                accept="image/*" required
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                        </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-lg px-5"
+                                style="background-color: rgba(255, 220, 0, 0.8); color: black; border-radius: 30px; font-weight: 600;">
+                                Añadir Álbum
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="formularioEliminarAlbum" class="card shadow-lg border-0 mb-4 formularioSeccion"
+                style="display: none; border-radius: 8px;">
+                <div class="card-header py-3"
+                    style="background-color: rgba(255, 65, 54, 0.8); border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                    <h4 class="card-title mb-0 text-center text-white">Eliminar un Álbum</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form id="form-eliminar-album" onsubmit="return eliminarAlbum(event)" class="row g-4">
+                        <div class="col-12">
+                            <label for="albumEliminar" class="form-label" style="color: #FFFFFF;">Seleccionar Álbum a
+                                Eliminar</label>
+                            <select id="albumEliminar" class="form-select form-select-lg" name="albumEliminar" required
+                                style="background-color: #333333; color: #FFFFFF; border: none; border-radius: 4px;">
+                            </select>
+                        </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-lg px-5"
+                                style="background-color: rgba(255, 65, 54, 0.8); color: white; border-radius: 30px; font-weight: 600; transition: all 0.3s ease;">
+                                Eliminar Álbum
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
