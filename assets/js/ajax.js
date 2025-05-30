@@ -533,3 +533,39 @@ function subirCancion(evento) {
 
     return false;
 }
+
+async function eliminarCancion(evento) {
+    evento.preventDefault();
+
+    const idCancion = document.getElementById('cancionEliminar').value;
+
+    // si no se selecciona ninguna cancion se muestra un mensaje
+    if (!idCancion) {
+        mostrarToast('Por favor, selecciona una canción.', 'error');
+        return;
+    }
+
+    try {
+        const respuesta = await fetch('./controladores/AdministrarControlador.php?accion=eliminar_cancion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: idCancion })
+        });
+
+        const datos = await respuesta.json();
+
+        // si todo sale bien se muestra un mensaje de exito
+        if (datos.exito) {
+            mostrarToast('Canción eliminada correctamente', 'exito');
+            llenarSelectCanciones();
+        } else {
+            mostrarToast('Error: ' + datos.mensaje, 'error');
+        }
+
+    } catch (error) {
+        // si algo falla se muestra el error
+        mostrarToast('Error al eliminar la canción: ' + error.message, 'error');
+    }
+}
