@@ -475,3 +475,61 @@ async function llenarSelectArtistas() {
 }
 
 llenarSelectArtistas();
+
+function subirCancion(evento) {
+    evento.preventDefault();
+
+    const nombre = document.getElementById('cancionNombre').value;
+    const idAlbum = document.getElementById('cancionAlbum').value;
+    const duracion = document.getElementById('cancionDuracion').value;
+    const archivoAudio = document.getElementById('cancionAudio');
+    const archivoImagen = document.getElementById('cancionImagen');
+
+    // si falta algun campo se muestra un mensaje
+    if (!nombre || !idAlbum || !duracion) {
+        mostrarToast('Por favor complete todos los campos requeridos', 'error');
+        return false;
+    }
+
+    // si no hay audio se muestra un mensaje
+    if (!archivoAudio.files[0]) {
+        mostrarToast('Debe seleccionar un archivo de audio', 'error');
+        return false;
+    }
+
+    const datos = new FormData();
+    datos.append('nombre', nombre);
+    datos.append('album_id', idAlbum);
+    datos.append('duracion', duracion);
+    datos.append('accion', 'crear_cancion');
+
+    // si hay imagen se agrega
+    if (archivoImagen.files[0]) {
+        datos.append('imagen', archivoImagen.files[0]);
+    }
+
+    datos.append('archivo_audio', archivoAudio.files[0]);
+
+    mostrarToast('Subiendo canción...', 'info');
+
+    fetch('./controladores/AdministrarControlador.php', {
+        method: 'POST',
+        body: datos
+    })
+    .then(respuesta => respuesta.json())
+    .then(datos => {
+        // si todo sale bien se muestra mensaje
+        if (datos.exito) {
+            mostrarToast('Canción subida correctamente', 'exito');
+            document.getElementById('form-cancion').reset();
+            llenarSelectCanciones();
+        } else {
+            mostrarToast(datos.mensaje || 'Error al subir la canción', 'error');
+        }
+    })
+    .catch(error => {
+        mostrarToast('Error al procesar la solicitud: ' + error.message, 'error');
+    });
+
+    return false;
+}
