@@ -545,3 +545,63 @@ function cargarAdministracion() {
     document.getElementById('contenidoPerfil').style.display = 'none';
     document.getElementById('contenidoAdministracion').style.display = 'block';
 }
+
+// funcion para mostrar los artistas en la pagina
+function mostrarArtistas(artistas) {
+    var contenedorArtistas = document.getElementById('contenedorArtistas');
+
+    contenedorArtistas.innerHTML = '';
+
+    if (Array.isArray(artistas) && artistas.length > 0) {
+        // creamos el codigo html para el carrusel de artistas
+        let swiperHTML = `
+        <div class="swiper swiperArtistas">
+            <div class="swiper-wrapper">`;
+
+        // agregamos cada artista al carrusel
+        artistas.forEach(artista => {
+            swiperHTML += `
+            <div class="swiper-slide">
+                <div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="position-relative">
+                        <div class="imagen-contenedor" onclick="cargarDetalleArtista(${artista.CODARTISTA})" style="cursor: pointer;">
+                            <img src="${artista.IMAGEN}" class="card-img-top img-fluid imagen-artista" alt="${artista.NOMBRE}">
+                            <div class="vista-previa">
+                                <h5 class="fw-bold text-center text-white">${artista.NOMBRE}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        });
+
+        swiperHTML += `
+            </div>
+        </div>`;
+
+        // agregamos el carrusel a la pagina
+        contenedorArtistas.innerHTML = swiperHTML;
+
+        new Swiper('.swiperArtistas', {
+            slidesPerView: 6,
+            spaceBetween: 20,
+            loop: true,
+            pagination: false,
+            breakpoints: {
+                320: { slidesPerView: 1 },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 4 },
+                1400: { slidesPerView: 6 }
+            }
+        });
+
+    } else {
+        // mensaje si no hay artistas
+        contenedorArtistas.innerHTML = `
+            <div class="col-12">
+                <div class="alerta alerta-advertencia texto-centro">
+                    <i class="fas fa-exclamation-circle"></i> No hay artistas disponibles.
+                </div>
+            </div>`;
+    }
+}
