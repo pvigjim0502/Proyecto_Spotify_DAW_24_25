@@ -649,3 +649,40 @@ async function modificarCancion(evento) {
         mostrarToast('Error: ' + error.message, 'error');
     }
 }
+
+function añadirAlbum(evento) {
+    evento.preventDefault();
+
+    let nombre = document.getElementById('albumNombre').value.trim(); // guarda el nombre del album
+    let artista = document.getElementById('artistaAlbum').value; // guarda el artista del album
+    let fecha = document.getElementById('albumFechaLanzamiento').value; // guarda la fecha del album
+    let imagen = document.getElementById('albumImagen').files[0]; // guarda la imagen del album
+
+    // si falta algo importante, muestra mensaje y se detiene
+    if (!nombre || !artista || !fecha || !imagen) {
+        mostrarToast('rellene todos los campos', 'error');
+        return;
+    }
+
+    // se preparan los datos para enviar al servidor
+    let datos = new FormData();
+    datos.append('accion', 'crear_album');
+    datos.append('nombre', nombre);
+    datos.append('artista', artista);
+    datos.append('fecha', fecha);
+    datos.append('imagen', imagen);
+
+    fetch('./controladores/AdministrarControlador.php', {
+        method: 'POST',
+        body: datos
+    })
+    .then(respuesta => respuesta.json())
+    .then(info => {
+        if (info.exito) {
+            mostrarToast('álbum añadido', 'exito');
+            document.getElementById('form-album').reset();
+        } else {
+            mostrarToast(info.mensaje, 'error');
+        }
+    });
+}
