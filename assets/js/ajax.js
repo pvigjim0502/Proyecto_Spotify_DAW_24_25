@@ -718,3 +718,44 @@ function eliminarAlbum(evento) {
         }
     });
 }
+
+function modificarAlbum(evento) {
+    evento.preventDefault();
+
+    let id = document.getElementById('albumSeleccionado').value; // guarda el id del album
+    let nombre = document.getElementById('albumNombreModificar').value.trim(); // guarda el nuevo nombre
+    let artista = document.getElementById('artistaAlbumModificar').value; // guarda el nuevo artista
+    let fecha = document.getElementById('albumFechaLanzamientoModificar').value; // guarda la nueva fecha
+    let imagen = document.getElementById('imagen').files[0]; // guarda la nueva imagen si hay
+
+    // si falta nombre, artista o id, se muestra mensaje
+    if (!id || !nombre || !artista) {
+        mostrarToast('rellene los campos obligatorios', 'error');
+        return;
+    }
+
+    let datos = new FormData();
+    datos.append('accion', 'modificar_album');
+    datos.append('id', id);
+    datos.append('nombre', nombre);
+    datos.append('artista', artista);
+    datos.append('fecha', fecha);
+
+    if (imagen) {
+    datos.append('imagen', imagen); // si hay imagen nueva, se añade
+    }
+    
+    fetch('./controladores/AdministrarControlador.php', {
+        method: 'POST',
+        body: datos
+    })
+    .then(respuesta => respuesta.json())
+    .then(info => {
+        if (info.exito) {
+            mostrarToast('álbum modificado', 'exito');
+            document.getElementById('form-modificar-album').reset();
+        } else {
+            mostrarToast(info.mensaje, 'error');
+        }
+    });
+}
