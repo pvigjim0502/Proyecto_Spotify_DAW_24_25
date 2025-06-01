@@ -686,3 +686,35 @@ function añadirAlbum(evento) {
         }
     });
 }
+
+function eliminarAlbum(evento) {
+    evento.preventDefault();
+
+    let id = document.getElementById('albumEliminar').value; // guarda el id del album a eliminar
+
+    // si no se eligio album, muestra mensaje
+    if (!id) {
+        mostrarToast('seleccione un álbum', 'error');
+        return;
+    }
+
+    // se preparan los datos para enviar
+    let datos = new FormData();
+    datos.append('accion', 'eliminar_album');
+    datos.append('id', id);
+
+    // se manda al servidor
+    fetch('./controladores/AdministrarControlador.php', {
+        method: 'POST',
+        body: datos
+    })
+    .then(respuesta => respuesta.json())
+    .then(info => {
+        if (info.exito) {
+            mostrarToast('álbum eliminado', 'exito');
+            document.getElementById('form-eliminar-album').reset();
+        } else {
+            mostrarToast(info.mensaje, 'error');
+        }
+    });
+}
