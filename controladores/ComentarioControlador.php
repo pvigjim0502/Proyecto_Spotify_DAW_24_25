@@ -199,3 +199,36 @@ function publicarComentario($usuarioNombre, $idAlbum, $comentario)
         ];
     }
 }
+
+// esta funcion es para cambiar un comentario que ya existe
+function editarComentario($idComentario, $comentarioNuevo)
+{
+    // nos conectamos a la base de datos
+    $db = obtenerConexion();
+    try {
+        // si el comentario nuevo esta vacio, avisamos
+        if (empty($comentarioNuevo)) {
+            throw new Exception("El comentario no puede estar vacio");
+        }
+
+        // limpiamos el comentario para que no tenga cosas raras
+        $comentarioNuevo = htmlspecialchars($comentarioNuevo, ENT_QUOTES, 'UTF-8');
+
+        // actualizamos el comentario en la base de datos
+        $stmt = $db->prepare('UPDATE COMENTARIOS SET COMENTARIO = ? WHERE ID = ?');
+        $stmt->execute([$comentarioNuevo, $idComentario]);
+
+        // decimos que el comentario se actualizo bien
+        return [
+            'exito' => true,
+            'mensaje' => 'Comentario actualizado exitosamente'
+        ];
+
+    } catch (Exception $e) {
+        // si algo salio mal, devolvemos un mensaje de error
+        return [
+            'exito' => false,
+            'mensaje' => 'Error al editar el comentario: ' . $e->getMessage()
+        ];
+    }
+}
