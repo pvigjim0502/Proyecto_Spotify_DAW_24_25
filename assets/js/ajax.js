@@ -694,7 +694,7 @@ function eliminarAlbum(evento) {
 
     // si no se eligio album, muestra mensaje
     if (!id) {
-        mostrarToast('seleccione un álbum', 'error');
+        mostrarToast('Seleccione un álbum', 'error');
         return;
     }
 
@@ -730,7 +730,7 @@ function modificarAlbum(evento) {
 
     // si falta nombre, artista o id, se muestra mensaje
     if (!id || !nombre || !artista) {
-        mostrarToast('rellene los campos obligatorios', 'error');
+        mostrarToast('Rellene los campos obligatorios', 'error');
         return;
     }
 
@@ -794,4 +794,61 @@ async function cargarArtistasParaEliminar() {
         selectElement.innerHTML = '<option value="" disabled selected>Error de conexion</option>';
         console.error('Error al cargar artistas para eliminar:', error);
     }
+}
+
+// funcion para crear artista
+async function crearArtista(evento) {
+    // evitamos que la pagina se recargue
+    evento.preventDefault();
+
+    // agarramos el formulario y los datos
+    const formulario = evento.target;
+    const datos = new FormData(formulario);
+    datos.append('accion', 'crear_artista');
+
+    // agarramos el boton para desactivarlo mientras se envia
+    const boton = formulario.querySelector('button[type="submit"]');
+    const textoOriginal = boton.textContent;
+
+    try {
+        // desactivamos el boton para que no se pueda hacer click muchas veces
+        boton.disabled = true;
+
+        // mandamos los datos al servidor
+        const respuesta = await fetch('./controladores/AdministrarControlador.php', {
+            method: 'POST',
+            body: datos
+        });
+
+        // leemos la respuesta del servidor
+        const resultado = await respuesta.json();
+
+        // si todo salio bien
+        if (resultado.exito) {
+            mostrarToast('Artista creado correctamente', 'exito');
+            formulario.reset();
+
+            // actualizamos las listas
+            await cargarArtistasParaEliminar();
+            await llenarSelectArtistas();
+            await cargarArtistasAdmin();
+        } else {
+            mostrarToast(resultado.mensaje || 'Error al crear artista', 'error');
+        }
+
+        // volvemos a activar el boton
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
+
+    } catch (error) {
+        // mostramos error si algo falla
+        console.error('error en crearArtista:', error);
+        mostrarToast('Error al comunicarse con el servidor', 'error');
+
+        // si hay error tambien volvemos a activar el boton
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
+    }
+
+    return false;
 }
