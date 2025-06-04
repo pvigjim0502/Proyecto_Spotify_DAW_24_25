@@ -852,3 +852,68 @@ async function crearArtista(evento) {
 
     return false;
 }
+
+// funcion para modificar artista
+async function modificarArtista(evento) {
+    // evitamos que se recargue la pagina
+    evento.preventDefault();
+
+    // agarramos los campos necesarios
+    const id = document.getElementById('selectArtistaModificar')?.value;
+    const nombre = document.getElementById('nombreArtistaModificar')?.value.trim();
+    const imagen = document.getElementById('imagenArtistaModificar');
+    const formulario = document.getElementById('form-modificar-artista');
+
+    // si falta id o nombre, no seguimos
+    if (!id || !nombre) {
+        mostrarToast('complete los campos obligatorios', 'error');
+        return;
+    }
+
+    try {
+        const datos = new FormData(formulario);
+        datos.append('accion', 'modificar_artista');
+
+        // si hay imagen nueva y es valida la agregamos
+        if (imagen && imagen.files && imagen.files.length > 0) {
+            const archivo = imagen.files[0];
+            const tipo = archivo.type;
+        
+            let esImagen = true;
+            const texto = "image/";
+        
+            for (let i = 0; i < texto.length; i++) {
+                if (tipo[i] !== texto[i]) {
+                    esImagen = false;
+                    break;
+                }
+            }
+        
+            if (esImagen) {
+                datos.append('imagenArtista', archivo);
+            }
+        }
+
+        const respuesta = await fetch('./controladores/AdministrarControlador.php', {
+            method: 'POST',
+            body: datos
+        });
+
+        const resultado = await respuesta.json();
+
+        if (resultado.exito) {
+            mostrarToast('artista modificado', 'exito');
+            formulario.reset();
+            const artistas = await obtenerDatos('./controladores/AdministrarControlador.php?accion=obtener_artistas');
+            mostrarArtistas(artistas);
+        } else {
+            if (resultado.mensaje) {
+                mostrarToast(resultado.mensaje, 'error');
+            } else {
+                mostrarToast('Error al modificar', 'error');
+            }
+        }
+    } catch (error) {
+        mostrarToast('Error al comunicarse con el servidor', 'error');
+    }
+}
