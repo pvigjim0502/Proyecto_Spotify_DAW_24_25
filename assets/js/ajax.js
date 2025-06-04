@@ -759,3 +759,39 @@ function modificarAlbum(evento) {
         }
     });
 }
+
+// funcion para cargar artistas en el select de eliminar
+async function cargarArtistasParaEliminar() {
+    // buscamos el select que tiene el id artistaEliminar
+    const selectElement = document.getElementById('artistaEliminar');
+
+    try {
+        // pedimos los artistas al archivo php con fetch
+        const respuesta = await fetch('./controladores/AdministrarControlador.php?accion=obtener_artistas');
+        const datos = await respuesta.json();
+
+        // si todo salio bien y hay datos
+        if (datos.exito && datos.data) {
+            // ponemos una opcion por defecto para que elija uno
+            selectElement.innerHTML = '<option value="" disabled selected>Seleccione un artista</option>';
+
+            // recorremos la lista de artistas
+            datos.data.forEach(function(artista) {
+                // creamos una opcion nueva
+                const opcion = document.createElement('option');
+                opcion.value = artista.CODARTISTA;
+                opcion.textContent = artista.NOMBRE;
+                // metemos la opcion en el select
+                selectElement.appendChild(opcion);
+            });
+        } else {
+            // si hubo un problema mostramos mensaje de error
+            selectElement.innerHTML = '<option value="" disabled selected>Error al cargar artistas</option>';
+            console.error('Error al cargar artistas:', datos.mensaje);
+        }
+    } catch (error) {
+        // si algo fallo con la conexion mostramos mensaje
+        selectElement.innerHTML = '<option value="" disabled selected>Error de conexion</option>';
+        console.error('Error al cargar artistas para eliminar:', error);
+    }
+}
