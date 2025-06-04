@@ -650,6 +650,7 @@ async function modificarCancion(evento) {
     }
 }
 
+// funcion para añadir el album
 function añadirAlbum(evento) {
     evento.preventDefault();
 
@@ -719,6 +720,7 @@ function eliminarAlbum(evento) {
     });
 }
 
+// funcion para modificar el album
 function modificarAlbum(evento) {
     evento.preventDefault();
 
@@ -955,4 +957,168 @@ async function eliminarArtista(evento) {
     } catch (error) {
         mostrarToast('error: ' + error.message, 'error');
     }
+}
+
+// esta variable guarda la ultima palabra que escribio el usuario para buscar
+// asi cuando el usuario escribe la misma palabra otra vez no hace la busqueda otra vez
+let ultimaBusqueda = '';
+
+// funcion para buscar todo lo que escriba el usuario y mostrar resultados
+async function buscarTodo() {
+    const inputBusqueda = document.getElementById('buscar');
+    const resultadosBusqueda = document.getElementById('resultadosBusqueda');
+    const contenedorResultados = document.getElementById('contenedorResultados');
+    const termino = inputBusqueda.value.trim();
+
+    // si la palabra que escribio el usuario es menor que 2 no se busca
+    if (termino.length < 2) {
+        resultadosBusqueda.style.display = 'none';
+        return;
+    }
+
+    // evitar busquedas duplicadas del mismo término
+    if (termino === ultimaBusqueda) {
+        return;
+    }
+    ultimaBusqueda = termino;
+
+    try {
+        // mostrar el cargando resultados
+        contenedorResultados.innerHTML = `
+            <div class="text-center py-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Buscando...</span>
+                </div>
+                <p class="mt-2 mb-0 text-light">Buscando "${termino}"...</p>
+            </div>
+        `;
+        resultadosBusqueda.style.display = 'block';
+
+        // crear la url con el termino para buscar en el servidor
+        const url = `./controladores/BuscarControlador.php?termino=${encodeURIComponent(termino)}`;
+        const respuesta = await fetch(url);
+
+        const datos = await respuesta.json();
+
+        if (datos.exito) {
+            mostrarResultados(datos, termino);
+        } else {
+            mostrarError(datos.mensaje || 'Error en la búsqueda');
+        }
+    } catch (error) {
+        mostrarError(`Error al realizar la búsqueda: ${error.message}`);
+    }
+}
+
+function mostrarResultados(datos, termino) {
+    const contenedorResultados = document.getElementById('contenedorResultados');
+    let html = '';
+
+    // mostrar canciones encontradas, si hay canciones
+    if (datos.canciones && datos.canciones.length > 0) {
+        html = `
+        <div class="mb-3">
+            <h6 class="fw-bold mb-2 text-light">Canciones</h6>
+            <ul class="list-unstyled">
+        `;
+        for (let i = 0; i < datos.canciones.length; i++) {
+            let cancion = datos.canciones[i];
+            html += `
+                <li class="search-result-item">
+                    <a href="#" onclick="cargarCancionDesdeBusqueda(${cancion.CODALBUM}, ${cancion.CODCANCION}); return false;"
+                       class="text-decoration-none text-light">
+                        <div class="d-flex align-items-center">
+                            <img src="${cancion.IMAGEN}"
+                                 alt="${cancion.NOMBRE}"
+                                 class="rounded me-3 search-item-image"
+                                 style="object-fit: cover;">
+                            <div>
+                                <p class="mb-0 fw-bold search-item-title">${resaltarTermino(cancion.NOMBRE, termino)}</p>
+                                <small class="text-muted search-item-subtitle">
+                                    ${resaltarTermino(cancion.ARTISTA, termino)} - ${resaltarTermino(cancion.ALBUM, termino)}
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            `;
+        }
+        html += `
+            </ul>
+        </div>
+        `;
+    }
+
+    // mostrar albumes encontrados, si hay albumes
+    if (datos.albumes && datos.albumes.length > 0) {
+        html += `
+        <div class="mb-3">
+            <h6 class="fw-bold mb-2 text-light">Álbumes</h6>
+            <div class="row g-2">
+        `;
+        for (let i = 0; i < datos.albumes.length; i++) {
+            let album = datos.albumes[i];
+            html += `
+                <div class="col-6 col-md-4">
+                    <a href="#" onclick="cargarCanciones(${album.CODALBUM}); return false;"
+                       class="text-decoration-none search-album-link">
+                        <div class="card border-0 bg-transparent search-album-card">
+                            <img src="${album.CARATULA}"
+                                 alt="${album.NOMBRE}"
+                                 class="card-img-top rounded shadow-sm"
+                                 style="aspect-ratio: 1/1; object-fit: cover;">
+                            <div class="card-body px-0 py-2">
+                                <h6 class="card-title mb-0 text-truncate">${resaltarTermino(album.NOMBRE, termino)}</h6>
+                                <small class="text-muted">${resaltarTermino(album.ARTISTA, termino)}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }
+        html += `
+            </div>
+        </div>
+        `;
+    }
+
+    // mostrar artistas encontrados, si hay artistas
+    if (datos.artistas && datos.artistas.length > 0) {
+        html += `
+        <div class="mb-2">
+            <h6 class="fw-bold mb-2 text-light">Artistas</h6>
+            <div class="d-flex flex-wrap gap-3">
+        `;
+        for (let i = 0; i < datos.artistas.length; i++) {
+            let artista = datos.artistas[i];
+            html += `
+                <a href="#" onclick="cargarArtistaDesdeBusqueda(${artista.CODARTISTA}); return false;"
+                   class="text-decoration-none text-center search-artist-link" style="width: 80px;">
+                    <div class="rounded-circle overflow-hidden mb-2 search-artist-image-container">
+                        <img src="${artista.IMAGEN}"
+                             alt="${artista.NOMBRE}"
+                             class="w-100 h-100 object-fit-cover">
+                    </div>
+                    <p class="mb-0 small text-truncate text-light">${resaltarTermino(artista.NOMBRE, termino)}</p>
+                </a>
+            `;
+        }
+        html += `
+            </div>
+        </div>
+        `;
+    }
+
+    // mostrar mensaje si no hay resultados
+    if (html === '') {
+        html = `
+        <div class="text-center py-4 text-light">
+            <i class="fas fa-search fa-2x mb-3 text-muted"></i>
+            <p class="mb-0">No se encontraron resultados para "${termino}"</p>
+            <small class="text-muted">intenta con otros terminos de busqueda</small>
+        </div>
+        `;
+    }
+
+    contenedorResultados.innerHTML = html;
 }
