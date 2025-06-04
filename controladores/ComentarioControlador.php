@@ -102,3 +102,48 @@ function darLike($idComentario)
         ];
     }
 }
+
+// esta funcion es para dar no me gusta o quitarlo
+function darDislike($idComentario)
+{
+    // nos conectamos a la base de datos
+    $db = obtenerConexion();
+    // el nombre de la galleta para este comentario
+    $cookieName = 'reaccion_' . $idComentario;
+
+    // vemos si ya hay una reaccion guardada (me gusta o no me gusta)
+    if (isset($_COOKIE[$cookieName])) {
+        $reaccionActual = $_COOKIE[$cookieName];
+
+        // si ya le habia dado no me gusta
+        if ($reaccionActual === 'dislike') {
+            // quitamos la galleta
+            setcookie($cookieName, '', time() - 3600, "/");  // borramos la galleta para que no este mas
+            // restamos un dislike en la base de datos
+            $stmt = $db->prepare('UPDATE COMENTARIOS SET DISLIKES = DISLIKES - 1 WHERE ID = ?');
+            $stmt->execute([$idComentario]);
+            // decimos que se quito el dislike
+            return [
+                'exito' => true,
+                'mensaje' => 'dislike eliminado exitosamente'
+            ];
+        } elseif ($reaccionActual === 'like') {
+            // si ya le dio me gusta, no puede dar no me gusta
+            return [
+                'exito' => false,
+                'mensaje' => 'no puedes dar dislike si ya diste like'
+            ];
+        }
+    } else {
+        // si no habia reaccion, guardamos el no me gusta
+        setcookie($cookieName, 'dislike', time() + (86400 * 30), "/"); // guardamos la galleta por 30 dias
+        // sumamos un dislike en la base de datos
+        $stmt = $db->prepare('UPDATE COMENTARIOS SET DISLIKES = DISLIKES + 1 WHERE ID = ?');
+        $stmt->execute([$idComentario]);
+        // decimos que se agrego el dislike
+        return [
+            'exito' => true,
+            'mensaje' => 'dislike añadido exitosamente'
+        ];
+    }
+}
