@@ -550,19 +550,26 @@ function cargarAdministracion() {
 function mostrarArtistas(artistas) {
     var contenedorArtistas = document.getElementById('contenedorArtistas');
 
+    // vaciamos el contenido anterior
     contenedorArtistas.innerHTML = '';
 
     if (Array.isArray(artistas) && artistas.length > 0) {
-        // creamos el codigo html para el carrusel de artistas
-        let swiperHTML = `
-        <div class="swiper swiperArtistas">
-            <div class="swiper-wrapper">`;
+        // creamos el contenedor principal del swiper
+        let contenedorSwiper = document.createElement('div');
+        contenedorSwiper.className = 'swiper swiperArtistas';
 
-        // agregamos cada artista al carrusel
-        artistas.forEach(artista => {
-            swiperHTML += `
-            <div class="swiper-slide">
-                <div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden">
+        let contenedorSlides = document.createElement('div');
+        contenedorSlides.className = 'swiper-wrapper';
+
+        // usamos bucle for en lugar de .forEach
+        for (let i = 0; i < artistas.length; i++) {
+            let artista = artistas[i];
+
+            let slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+
+            slide.innerHTML = `
+                <div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden animacion-revelar">
                     <div class="position-relative">
                         <div class="imagen-contenedor" onclick="cargarDetalleArtista(${artista.CODARTISTA})" style="cursor: pointer;">
                             <img src="${artista.IMAGEN}" class="card-img-top img-fluid imagen-artista" alt="${artista.NOMBRE}">
@@ -572,33 +579,45 @@ function mostrarArtistas(artistas) {
                         </div>
                     </div>
                 </div>
-            </div>`;
-        });
+            `;
 
-        swiperHTML += `
-            </div>
-        </div>`;
+            contenedorSlides.appendChild(slide);
+        }
 
-        // agregamos el carrusel a la pagina
-        contenedorArtistas.innerHTML = swiperHTML;
+        // ensamblamos el swiper
+        contenedorSwiper.appendChild(contenedorSlides);
+        contenedorArtistas.appendChild(contenedorSwiper);
 
+        // iniciamos el swiper
         new Swiper('.swiperArtistas', {
-            slidesPerView: 6,
+            slidesPerView: 1,
             spaceBetween: 20,
             loop: true,
             pagination: false,
             breakpoints: {
-                320: { slidesPerView: 1 },
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 4 },
-                1400: { slidesPerView: 6 }
+                320: {
+                    slidesPerView: 1,
+                    spaceBetween: 15
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 20
+                },
+                1024: {
+                    slidesPerView: 4,
+                    spaceBetween: 20
+                },
+                1400: {
+                    slidesPerView: 6,
+                    spaceBetween: 20
+                }
             }
         });
 
     } else {
         // mensaje si no hay artistas
         contenedorArtistas.innerHTML = `
-            <div class="col-12">
+            <div class="col-12 animacion-revelar">
                 <div class="alerta alerta-advertencia texto-centro">
                     <i class="fas fa-exclamation-circle"></i> No hay artistas disponibles.
                 </div>
