@@ -232,3 +232,28 @@ function editarComentario($idComentario, $comentarioNuevo)
         ];
     }
 }
+
+// esta funcion es para borrar un comentario
+function eliminarComentario($idComentario)
+{
+    // nos conectamos a la base de datos
+    $db = obtenerConexion();
+    try {
+        // borramos el comentario de la base de datos
+        $stmt = $db->prepare('DELETE FROM COMENTARIOS WHERE ID = ?');
+        $stmt->execute([$idComentario]);
+
+        // decimos que el comentario se borro bien
+        return [
+            'exito' => true,
+            'mensaje' => 'Comentario eliminado exitosamente'
+        ];
+
+    } catch (Exception $e) {
+        // si algo salio mal, devolvemos un mensaje de error
+        return [
+            'exito' => false,
+            'mensaje' => 'Error al eliminar el comentario: ' . $e->getMessage()
+        ];
+    }
+}
