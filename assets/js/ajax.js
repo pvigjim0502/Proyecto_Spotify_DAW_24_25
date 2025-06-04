@@ -917,3 +917,42 @@ async function modificarArtista(evento) {
         mostrarToast('Error al comunicarse con el servidor', 'error');
     }
 }
+
+// funcion para eliminar artista
+async function eliminarArtista(evento) {
+    evento.preventDefault();
+
+    const id = document.getElementById('artistaEliminar').value;
+    if (!id) {
+        mostrarToast('seleccione un artista', 'error');
+        return;
+    }
+
+    try {
+        const datos = new FormData();
+        datos.append('accion', 'eliminar_artista');
+        datos.append('id', id);
+
+        const respuesta = await fetch('./controladores/AdministrarControlador.php', {
+            method: 'POST',
+            body: datos
+        });
+
+        const resultado = await respuesta.json();
+
+        if (resultado.exito) {
+            mostrarToast('artista eliminado', 'exito');
+            document.getElementById('form-eliminar-artista').reset();
+            await cargarArtistasParaEliminar();
+            await cargarArtistasAdmin();
+        } else {
+            if (resultado.mensaje) {
+                mostrarToast(resultado.mensaje, 'error');
+            } else {
+                mostrarToast('error al eliminar', 'error');
+            }
+        }
+    } catch (error) {
+        mostrarToast('error: ' + error.message, 'error');
+    }
+}
