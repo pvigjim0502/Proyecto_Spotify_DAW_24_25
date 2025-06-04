@@ -147,3 +147,55 @@ function darDislike($idComentario)
         ];
     }
 }
+
+// esta funcion es para escribir un comentario nuevo en un album
+function publicarComentario($usuarioNombre, $idAlbum, $comentario)
+{
+    // nos conectamos a la base de datos
+    $db = obtenerConexion();
+    try {
+        // si el id del album no es un numero, avisamos
+        if (!is_numeric($idAlbum)) {
+            throw new Exception("Id de album no valido");
+        }
+
+        // buscamos el id del usuario usando su nombre
+        $stmt = $db->prepare('SELECT ID FROM USUARIOS WHERE NOMBRE_USUARIO = ?');
+        $stmt->execute([$usuarioNombre]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // si no encontramos al usuario, avisamos
+        if (!$usuario) {
+            throw new Exception("Usuario no encontrado");
+        }
+
+        $idUsuario = $usuario['ID'];
+
+        // limpiamos el comentario para que no tenga cosas raras
+        $comentario = htmlspecialchars($comentario, ENT_QUOTES, 'UTF-8');
+        // si el comentario esta vacio, avisamos
+        if (empty($comentario)) {
+            throw new Exception("El comentario no puede estar vacio");
+        }
+
+        // insertamos el comentario en la base de datos
+        $stmt = $db->prepare(
+            'INSERT INTO COMENTARIOS (ID_USUARIO, ID_ALBUM, COMENTARIO)
+             VALUES (?, ?, ?)'
+        );
+        $stmt->execute([$idUsuario, $idAlbum, $comentario]);
+
+        // decimos que el comentario se publico bien
+        return [
+            'exito' => true,
+            'mensaje' => 'Comentario publicado exitosamente'
+        ];
+
+    } catch (Exception $e) {
+        // si algo salio mal, devolvemos un mensaje de error
+        return [
+            'exito' => false,
+            'mensaje' => 'Error al publicar el comentario: ' . $e->getMessage()
+        ];
+    }
+}
