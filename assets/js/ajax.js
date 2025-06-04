@@ -1122,3 +1122,51 @@ function mostrarResultados(datos, termino) {
 
     contenedorResultados.innerHTML = html;
 }
+
+function mostrarError(mensaje) {
+    const contenedorResultados = document.getElementById('contenedorResultados');
+    contenedorResultados.innerHTML = `
+        <div class="alert alert-danger mb-0">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            ${mensaje}
+        </div>
+    `;
+}
+
+function resaltarTermino(texto, termino) {
+    if (!texto || !termino) {
+        return texto;
+    } else {
+        const regex = new RegExp(`(${termino})`, 'gi'); // la g significa global y la i significa que es indiferente a mayusculas y minusculas
+        return texto.replace(regex, '<span class="fw-bold text-primary">$1</span>');
+    }
+}
+
+function limpiarBusqueda() {
+    document.getElementById('buscar').value = '';
+    document.getElementById('resultadosBusqueda').style.display = 'none';
+    ultimaBusqueda = '';
+}
+
+document.addEventListener('click', function (event) {
+    const buscador = document.getElementById('buscador');
+    const resultados = document.getElementById('resultadosBusqueda');
+
+    if (!buscador.contains(event.target)) {
+        resultados.style.display = 'none';
+    }
+});
+
+function cargarCancionDesdeBusqueda(albumId) {
+    cargarCanciones(albumId);
+    document.getElementById('resultadosBusqueda').style.display = 'none';
+}
+
+// funcion modificada para cargar artista desde busqueda
+function cargarArtistaDesdeBusqueda(codArtista) {
+    // ocultar resultados de busqueda
+    document.getElementById('resultadosBusqueda').style.display = 'none';
+
+    // llamar a la funcion de carga de detalle
+    cargarDetalleArtista(codArtista);
+}
