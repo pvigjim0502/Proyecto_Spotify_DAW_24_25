@@ -190,3 +190,22 @@ async function publicarComentario() {
         mostrarToast('Error al publicar: ' + error.message, 'error');
     }
 }
+
+function editarComentario(idComentario, comentarioActual, usuarioComentario) {
+    // esta funcion deja cambiar un comentario
+    const usuarioNombre = obtenerCookie('usuarioNombre');
+
+    if (usuarioNombre !== usuarioComentario) {
+        // si no es tu comentario, mostramos un error
+        mostrarToast('No puedes editar comentarios de otros usuarios', 'error');
+        return;
+    }
+
+    // pedimos el nuevo comentario al usuario
+    const nuevoComentario = prompt('Edita tu comentario:', comentarioActual);
+
+    if (nuevoComentario && nuevoComentario.trim() !== comentarioActual) {
+        // si hay un cambio, actualizamos el comentario
+        actualizarComentario(idComentario, nuevoComentario.trim());
+    }
+}
