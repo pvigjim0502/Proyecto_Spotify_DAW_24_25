@@ -696,3 +696,198 @@ function cargarDetalleArtista(codArtista) {
             `;
         });
 }
+
+// funcion para mostrar los detalles del artista, los albumnes que tiene, canciones que tiene
+function mostrarDetalleArtista(artista, albums, canciones) {
+    var contenedor = document.getElementById('contenedorCanciones');
+    desplazarScrollArriba();
+    contenedor.className = 'container-fluid p-0 animacion-revelar-pagina';
+
+    var imagenArtista = artista.imagen;
+    if (!imagenArtista) {
+        imagenArtista = 'default-artist-image.jpg';
+    }
+
+    var html = `
+    <div class="vista-detalle-artista">
+        <div class="seccion-cabecera-artista position-relative mb-5 animacion-revelar">
+            <div class="superposicion-fondo-cabecera position-absolute w-100 h-100 artista-background-blur" style="
+                background: linear-gradient(to bottom, rgba(0,0,0,0.7), var(--fondo-body)),
+                url('${imagenArtista}') no-repeat center center;
+                background-size: cover;
+                filter: blur(8px);
+                z-index: 0;
+            "></div>
+
+            <div class="container-fluid position-relative py-5 px-4" style="z-index: 1;">
+                <div class="d-flex justify-content-between align-items-center mb-5 animacion-revelar">
+                    <button class="btn btn-outline-light rounded-pill px-4 py-2 boton-animado" onclick="irAtras()">
+                        <i class="fas fa-arrow-left me-2"></i>Volver atrás
+                    </button>
+                </div>
+
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-4 animacion-revelar">
+                        <img src="${imagenArtista}"
+                             class="img-fluid rounded-4 shadow-lg img-perfil-artista imagen-escala"
+                             alt="${artista.nombre}"
+                             style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
+                    </div>
+
+                    <div class="col-lg-8 col-info-artista animacion-revelar" style="color: var(--color-texto-body);">
+                        <h1 class="display-4 fw-bold mb-3 nombre-artista">${artista.nombre}</h1>
+
+                        <div class="d-flex align-items-center gap-4 mb-4 estadisticas-artista">
+                            <div class="d-flex align-items-center item-estadistica info-item animacion-revelar">
+                                <div class="p-3 rounded-3 me-3" style="background-color: rgba(29, 185, 84, 0.1);">
+                                    <i class="fas fa-compact-disc fs-1 icono-estadistica" style="color: var(--color-primario);"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 etiqueta-estadistica" style="color: var(--color-secundario);">Álbumes</p>
+                                    <h2 class="h4 mb-0 valor-estadistica">${albums.length}</h2>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center item-estadistica info-item animacion-revelar">
+                                <div class="p-3 rounded-3 me-3" style="background-color: rgba(29, 185, 84, 0.1);">
+                                    <i class="fas fa-music fs-1 icono-estadistica" style="color: var(--color-primario);"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 etiqueta-estadistica" style="color: var(--color-secundario);">Canciones</p>
+                                    <h2 class="h4 mb-0 valor-estadistica">${canciones.length}</h2>
+                                </div>
+                            </div>
+                        </div>`;
+
+    // biografia del artista
+    if (artista.biografia) {
+        html += `
+                        <div class="card tarjeta-bio-artista border-0 mb-4 card-transicion animacion-revelar" style="background-color: rgba(255,255,255,0.05);">
+                            <div class="card-body">
+                                <h3 class="h5 fw-bold mb-3"><i class="fas fa-book-open me-2"></i>Biografía</h3>
+                                <p class="mb-0 texto-bio-artista" style="color: rgba(255,255,255,0.8);">
+                                    ${artista.biografia}
+                                </p>
+                            </div>
+                        </div>`;
+    }
+
+    html += `
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid px-4 pb-5">
+            <div class="grid-container">
+
+                <div class="col-canciones">
+                    <div class="card tarjeta-canciones shadow-lg rounded-4 border-0 overflow-hidden card-transicion animacion-revelar" style="background-color: transparent;">
+                        <div class="card-header bg-transparent border-0 p-4 pb-2 cabecera-canciones">
+                            <h3 class="h4 fw-bold mb-0 pb-2 d-inline-block section-title" style="
+                                color: var(--color-texto-body);
+                                border-bottom: 3px solid var(--color-primario) !important;">
+                                Lista de canciones
+                            </h3>
+                        </div>
+                        <div class="card-body p-0 lista-canciones">`;
+
+    // lista de canciones
+    if (Array.isArray(canciones) && canciones.length > 0) {
+        for (var i = 0; i < canciones.length && i < 5; i++) {
+            var cancion = canciones[i];
+            
+            var numeroPista = (i + 1);
+            var numeroFormateado = numeroPista;
+            if (numeroPista < 10) {
+                numeroFormateado = '0' + numeroPista;
+            }
+            
+            var imagenCancion = cancion.IMAGEN;
+            if (!imagenCancion) {
+                imagenCancion = 'default-song-image.jpg';
+            }
+            
+            var duracionCancion = cancion.DURACION;
+            if (!duracionCancion) {
+                duracionCancion = '0:00';
+            }
+
+            html += `
+                            <div class="d-flex align-items-center p-4 border-bottom item-cancion-popular cancion-item animacion-revelar" style="border-color: rgba(255,255,255,0.1) !important;">
+                                <div class="d-flex align-items-center w-100 gap-3">
+                                    <span class="h5 fw-bold mb-0 text-center numero-pista" style="
+                                        color: var(--color-secundario);
+                                        width: 40px;
+                                        font-family: var(--bs-font-monospace);">
+                                        ${numeroFormateado}
+                                    </span>
+                                    <img src="${imagenCancion}"
+                                         alt="${cancion.NOMBRE}"
+                                         class="rounded-3 shadow-sm flex-shrink-0 portada-album-pista imagen-escala-pequena"
+                                         style="width: 64px; height: 64px; object-fit: cover;">
+                                    <div class="text-truncate info-pista" style="width: 30%; min-width: 150px;">
+                                        <h4 class="h6 fw-bold mb-1 text-truncate titulo-pista" style="color: var(--color-texto-body);">${cancion.NOMBRE}</h4>
+                                        <p class="small mb-0 nombre-artista-pista" style="color: var(--color-secundario);">${artista.nombre}</p>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3 text-end duracion-pista">
+                                        <span style="color: var(--color-secundario);">${duracionCancion}</span>
+                                    </div>
+                                </div>
+                            </div>`;
+        }
+    } else {
+        html += `<p class="p-4 text-center mensaje-alerta animacion-revelar" style="color: var(--color-secundario);">No hay canciones populares disponibles.</p>`;
+    }
+
+    html += `</div></div></div>`;
+
+    // seccion de álbumes
+    html += `
+                <div class="col-artista">
+                    <div class="card tarjeta-albumes shadow-lg rounded-4 border-0 mb-4 card-transicion animacion-revelar">
+                            <div class="card-header border-0 p-4 cabecera-albumes" style="
+                                background: linear-gradient(to right, var(--color-primario), transparent 100%);">
+                                <h3 class="h4 fw-bold mb-0 section-title" style="color: var(--color-texto-body);">
+                                    Álbumes
+                                </h3>
+                            </div>
+                            <div class="card-body p-4 rejilla-albumes">`;
+
+    if (Array.isArray(albums) && albums.length > 0) {
+        for (var j = 0; j < albums.length; j++) {
+            var albumItem = albums[j];
+            
+            var imagenAlbum = albumItem.CARATULA;
+            if (!imagenAlbum) {
+                imagenAlbum = 'default-album-cover.jpg';
+            }
+            
+            var añoAlbum = 'Año desconocido';
+            if (albumItem.FECHA_LANZAMIENTO) {
+                añoAlbum = new Date(albumItem.FECHA_LANZAMIENTO).getFullYear();
+            }
+            
+            var onclickHandler = '';
+            if (albumItem.CODALBUM) {
+                onclickHandler = `onclick="cargarCanciones(${albumItem.CODALBUM})"`;
+            }
+
+            html += `
+                                <div class="tarjeta-album album-item animacion-revelar" ${onclickHandler} style="background-color: #181818;">
+                                    <div class="contenedor-imagen-album">
+                                        <img src="${imagenAlbum}" class="portada-album rounded-3 shadow-sm imagen-escala-pequena" style="object-fit: cover;">
+                                    </div>
+                                    <div class="info-album">
+                                        <h3 class="titulo-album text-truncate h6 fw-bold mb-1" style="color: var(--color-texto-body);">${albumItem.NOMBRE}</h3>
+                                        <div class="año-album small" style="color: var(--color-secundario);">${añoAlbum}</div>
+                                    </div>
+                                </div>`;
+        }
+    } else {
+        html += `<p class="text-center mensaje-alerta animacion-revelar" style="color: var(--color-secundario);">No hay álbumes disponibles.</p>`;
+    }
+
+    html += `</div></div></div></div></div>`;
+    contenedor.innerHTML = html;
+}
