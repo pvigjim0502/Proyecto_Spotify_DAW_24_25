@@ -145,6 +145,12 @@ function mostrarAlbumes(albums) {
     }
 }
 
+// funcion para desplazar el scroll cada vez que se abre o un artista o album
+function desplazarScrollArriba() {
+    //hacer scroll hacia arriba automáticamente
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // guardamos el id del album que estamos viendo
 var albumSeleccionadoId = 0;
 
