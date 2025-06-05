@@ -257,3 +257,82 @@ function eliminarComentario($idComentario)
         ];
     }
 }
+
+// aqui lo que hacemos es segun la seleccion que se haga, pues se procede a una accion u otra
+try {
+    // leemos los datos que nos envian
+    $datos = json_decode(file_get_contents('php://input'), true);
+
+    // si nos enviaron datos con el metodo post (para guardar o cambiar cosas)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // si nos dicen que accion hacer
+        if (isset($datos['accion'])) {
+            // hacemos algo segun la accion
+            switch ($datos['accion']) {
+                case 'borrar_comentario':
+                    // si nos piden borrar un comentario y nos dan el id
+                    if (isset($datos['idComentario'])) {
+                        $resultado = eliminarComentario($datos['idComentario']); // lo borramos
+                        echo json_encode($resultado); // devolvemos la respuesta
+                        exit; // terminamos aqui
+                    }
+                    break;
+                case 'editar_comentario':
+                    // si nos piden editar un comentario y nos dan el id y el nuevo comentario
+                    if (isset($datos['idComentario'], $datos['comentario'])) {
+                        $resultado = editarComentario($datos['idComentario'], $datos['comentario']); // lo editamos
+                        echo json_encode($resultado); // devolvemos la respuesta
+                        exit; // terminamos aqui
+                    }
+                    break;
+                case 'dar_like':
+                    // si nos piden dar un me gusta y nos dan el id
+                    if (isset($datos['idComentario'])) {
+                        $resultado = darLike($datos['idComentario']); // damos el me gusta
+                        echo json_encode($resultado); // devolvemos la respuesta
+                        exit; // terminamos aqui
+                    }
+                    break;
+                case 'dar_dislike':
+                    // si nos piden dar un no me gusta y nos dan el id
+                    if (isset($datos['idComentario'])) {
+                        $resultado = darDislike($datos['idComentario']); // damos el no me gusta
+                        echo json_encode($resultado); // devolvemos la respuesta
+                        exit; // terminamos aqui
+                    }
+                    break;
+            }
+        }
+        // si nos envian un nuevo comentario con el nombre de usuario, id del album y el comentario
+        if (isset($datos['usuarioNombre'], $datos['idAlbum'], $datos['comentario'])) {
+            $resultado = publicarComentario($datos['usuarioNombre'], $datos['idAlbum'], $datos['comentario']); // lo publicamos
+            echo json_encode($resultado); // devolvemos la respuesta
+            exit; // terminamos aqui
+        }
+    }
+
+    // si nos piden datos con el metodo get (para obtener cosas) y nos dan el id del album
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['idAlbum'])) {
+        // obtenemos el id del album de forma segura
+        $idAlbum = filter_input(INPUT_GET, 'idAlbum', FILTER_VALIDATE_INT);
+        // si el id del album es valido
+        if ($idAlbum) {
+            $resultado = obtenerComentariosPorAlbum($idAlbum); // buscamos los comentarios
+            echo json_encode($resultado); // devolvemos la respuesta
+            exit; // terminamos aqui
+        } else {
+            // si el id del album no es valido, avisamos
+            throw new Exception("Id de album no valido");
+        }
+    }
+
+    // si no nos pidieron nada valido, avisamos
+    throw new Exception("Metodo no valido");
+
+} catch (Exception $e) {
+    // si algo sale mal en cualquier parte, devolvemos un mensaje de error
+    echo json_encode([
+        'exito' => false,
+        'mensaje' => $e->getMessage()
+    ]);
+}
