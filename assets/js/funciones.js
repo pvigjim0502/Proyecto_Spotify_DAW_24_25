@@ -624,3 +624,75 @@ function mostrarArtistas(artistas) {
             </div>`;
     }
 }
+
+// funcion para cargar los datos de un artista
+function cargarDetalleArtista(codArtista) {
+    // ocultamos las otras secciones
+    document.querySelectorAll('#contenedorAlbum, #contenedorArtistas, #buscador').forEach(function (el) {
+        el.style.display = 'none';
+    });
+
+    // mostramos animacion de carga
+    var contenedor = document.getElementById('contenedorCanciones');
+    contenedor.innerHTML = `
+        <div class="carga-artista">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3">Cargando artista...</p>
+        </div>
+    `;
+    contenedor.style.display = 'block';
+
+    // obtenemos los datos del artista
+    fetch('controladores/MusicaControlador.php')
+        .then(function (response) {
+            if (!response.ok) throw new Error('Error en la respuesta');
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.exito) throw new Error(data.mensaje || 'Error en los datos');
+
+            // buscamos los albumes del artista
+            var albumsFiltrados = [];
+            for (var i = 0; i < data.albums.length; i++) {
+                if (data.albums[i].CODARTISTA == codArtista) {
+                    albumsFiltrados.push(data.albums[i]);
+                }
+            }
+
+            if (albumsFiltrados.length === 0) {
+                throw new Error('Artista no encontrado');
+            }
+
+            // preparamos la informacion del artista
+            var artista = {
+                nombre: albumsFiltrados[0].ARTISTA,
+                imagen: albumsFiltrados[0].IMAGEN_ARTISTA,
+                biografia: albumsFiltrados[0].BIOGRAFIA,
+                pais: albumsFiltrados[0].PAIS_ORIGEN,
+                fechaNacimiento: albumsFiltrados[0].FECHA_NACIMIENTO
+            };
+
+            // juntamos todas las canciones del artista
+            var todasCanciones = [];
+            for (var j = 0; j < albumsFiltrados.length; j++) {
+                var album = albumsFiltrados[j];
+                for (var k = 0; k < album.canciones.length; k++) {
+                    var cancion = album.canciones[k];
+                    cancion.albumNombre = album.NOMBRE;
+                    cancion.albumImagen = album.CARATULA;
+                    todasCanciones.push(cancion);
+                }
+            }
+
+            mostrarDetalleArtista(artista, albumsFiltrados, todasCanciones);
+        })
+        .catch(function (error) {
+            console.error('Error:', error);
+            contenedor.innerHTML = `
+                <div class="error-artista alert alert-danger m-4">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    ${error.message}
+                </div>
+            `;
+        });
+}
