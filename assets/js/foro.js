@@ -137,3 +137,56 @@ async function cargarComentarios(idAlbum) {
         mostrarToast('Error cargando comentarios: ' + error.message, 'error');
     }
 }
+
+async function publicarComentario() {
+    // esta funcion publica un comentario nuevo
+    const comentarioInput = document.getElementById('comentarioInput');
+    const comentario = comentarioInput.value.trim();
+    const usuarioNombre = obtenerCookie('usuarioNombre');
+
+    if (!usuarioNombre) {
+        // si no hay usuario conectado, mostramos un error
+        mostrarToast('Debes iniciar sesión para comentar', 'error');
+        return;
+    }
+
+    if (!comentario) {
+        // si el comentario esta vacio, mostramos un error
+        mostrarToast('El comentario no puede estar vacío', 'error');
+        return;
+    }
+
+    if (!albumSeleccionadoId) {
+        // si no hay album seleccionado, mostramos un error
+        mostrarToast('Selecciona un álbum para comentar', 'error');
+        return;
+    }
+
+    try {
+        // enviamos el comentario al servidor
+        const respuesta = await fetch('./controladores/ComentarioControlador.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuarioNombre: usuarioNombre,
+                idAlbum: albumSeleccionadoId,
+                comentario: comentario
+            })
+        });
+
+        const datos = await respuesta.json();
+
+        if (datos.exito) {
+            // si todo sale bien, mostramos un mensaje y recargamos los comentarios
+            mostrarToast('Comentario publicado', 'exito');
+            comentarioInput.value = '';
+            cargarComentarios(albumSeleccionadoId);
+        } else {
+            // si hay un problema, mostramos el error del servidor
+            mostrarToast(datos.mensaje, 'error');
+        }
+    } catch (error) {
+        // si algo falla al enviar, mostramos un error
+        mostrarToast('Error al publicar: ' + error.message, 'error');
+    }
+}
