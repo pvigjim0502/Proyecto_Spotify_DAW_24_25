@@ -5,6 +5,7 @@ require_once __DIR__ . '/../includes/funciones.php';
 
 $db = obtenerConexion();
 
+// funcion para crear un album
 function crearAlbum($nombre, $artista, $fechaLanzamiento, $imagen)
 {
     global $db;
@@ -38,6 +39,36 @@ function crearAlbum($nombre, $artista, $fechaLanzamiento, $imagen)
         return respuesta(true, 'Álbum creado correctamente.', ['rutaImagen' => $rutaImagen]);
     } catch (Exception $e) {
         return respuesta(false, 'Error al crear el álbum: ' . $e->getMessage());
+    }
+}
+
+// funcion para actualizar un album
+function actualizarAlbum($id, $nombre, $artista, $imagen = null)
+{
+    global $db;
+    try {
+        // consulta para actualizar nombre y codartista
+        $query = "UPDATE ALBUM SET NOMBRE = ?, CODARTISTA = ?";
+        $params = [$nombre, $artista];
+
+        // si hay imagen nueva se guarda y se añade a la consulta
+        if ($imagen) {
+            $rutaImagen = guardarArchivo($imagen, 'album');
+            $query .= ", CARATULA = ?";
+            $params[] = $rutaImagen;
+        }
+
+        // condicion para actualizar el album especifico
+        $query .= " WHERE CODALBUM = ?";
+        $params[] = $id;
+
+        // preparar y ejecutar la consulta
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+
+        return respuesta(true, 'Álbum actualizado correctamente');
+    } catch (PDOException $e) {
+        return respuesta(false, 'Error al actualizar el álbum: ' . $e->getMessage());
     }
 }
 
