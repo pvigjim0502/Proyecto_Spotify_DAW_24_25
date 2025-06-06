@@ -72,6 +72,41 @@ function actualizarAlbum($id, $nombre, $artista, $imagen = null)
     }
 }
 
+// funcion para eliminar un album
+function eliminarAlbum($id)
+{
+    global $db;
+    try {
+        // verificar si el album existe antes de eliminarlo
+        $stmt = $db->prepare("SELECT COUNT(*) FROM ALBUM WHERE CODALBUM = ?");
+        $stmt->execute([$id]);
+        $existe = $stmt->fetchColumn();
+
+        if ($existe == 0) {
+            return respuesta(false, 'El álbum no existe');
+        }
+
+        // verificar si hay canciones asociadas al album
+        $stmt = $db->prepare("SELECT COUNT(*) FROM CANCION WHERE CODALBUM = ?");
+        $stmt->execute([$id]);
+        $cancionesAsociadas = $stmt->fetchColumn();
+
+        if ($cancionesAsociadas > 0) {
+            // si hay canciones, se les quita la relacion con el album
+            $stmt = $db->prepare("UPDATE CANCION SET CODALBUM = NULL WHERE CODALBUM = ?");
+            $stmt->execute([$id]);
+        }
+
+        // ahora eliminar el album
+        $stmt = $db->prepare("DELETE FROM ALBUM WHERE CODALBUM = ?");
+        $stmt->execute([$id]);
+
+        return respuesta(true, 'Álbum eliminado correctamente');
+    } catch (PDOException $e) {
+        return respuesta(false, 'Error al eliminar el álbum: ' . $e->getMessage());
+    }
+}
+
 // manejo de acciones
 try {
     $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
