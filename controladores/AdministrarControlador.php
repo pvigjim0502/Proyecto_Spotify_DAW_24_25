@@ -107,6 +107,42 @@ function eliminarAlbum($id)
     }
 }
 
+// funcion para crear una cancion
+function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = null)
+{
+    global $db;
+    try {
+        // verificar que los datos requeridos no esten vacios
+        if (empty($nombre) || empty($albumId) || empty($duracion) || empty($archivoAudio)) {
+            throw new Exception('Datos incompletos');
+        }
+
+        // limpiar el nombre para usarlo como nombre base del archivo
+        $nombreBase = preg_replace('/[^a-zA-Z0-9\-_]/', '_', $nombre);
+
+        // renombrar y guardar el archivo de audio
+        $archivoAudio['name'] = $nombreBase . '.' . pathinfo($archivoAudio['name'], PATHINFO_EXTENSION);
+        $rutaAudio = guardarArchivo($archivoAudio, 'audio');
+
+        $rutaImagen = null;
+        // si hay imagen, renombrar y guardar
+        if ($imagen) {
+            $imagen['name'] = $nombreBase . '.' . pathinfo($imagen['name'], PATHINFO_EXTENSION);
+            $rutaImagen = guardarArchivo($imagen, 'imagen');
+        }
+
+        // insertar los datos de la cancion en la base de datos
+        $stmt = $db->prepare("INSERT INTO CANCION (NOMBRE, CODALBUM, DURACION, AUDIO, IMAGEN) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$nombreBase, $albumId, $duracion, $rutaAudio, $rutaImagen]);
+
+        // devolver respuesta exitosa
+        return respuesta(true, 'Cancion creada correctamente');
+    } catch (Exception $e) {
+        // devolver respuesta con error
+        return respuesta(false, 'Error al crear la cancion: ' . $e->getMessage());
+    }
+}
+
 // manejo de acciones
 try {
     $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
