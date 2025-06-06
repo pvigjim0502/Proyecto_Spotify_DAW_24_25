@@ -14,17 +14,21 @@ use PHPMailer\PHPMailer\Exception;
 
 $db = obtenerConexion();
 
-function generarContrasenaAleatoria($longitud = 10)
+function generarContrasenaAleatoria($longitud = 8)
 {
     // estos son los caracteres que puede tener la contrasena
     $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $caracteresEspeciales = '!@#$%^&*()_+{}|:"<>?.';
+
+    // se combinan todos los caracteres disponibles
+    $todosLosCaracteres = $caracteres . $caracteresEspeciales;
     $contrasena = '';
 
     // se repite hasta que la contrasena tenga la longitud que queremos
     for ($i = 0; $i < $longitud; $i++) {
         // se elige un caracter al azar y se agrega a la contrasena
-        $numero = rand(0, strlen($caracteres) - 1);
-        $contrasena = $contrasena . $caracteres[$numero];
+        $numero = rand(0, strlen($todosLosCaracteres) - 1);
+        $contrasena .= $todosLosCaracteres[$numero];
     }
 
     return $contrasena;
@@ -33,33 +37,34 @@ function generarContrasenaAleatoria($longitud = 10)
 function recuperarContrasena($correo)
 {
     global $db;
-
     $respuesta = ['exito' => false, 'mensaje' => ''];
 
-    // si el correo no es valido se envia un mensaje
     if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         $respuesta['mensaje'] = 'Correo electronico invalido';
         return $respuesta;
     }
 
-    // se crea la nueva contrasena
-    $nuevaContrasena = generarContrasenaAleatoria();
-
-    // se encripta la nueva contrasena
-    $hashedPassword = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
-
     try {
-        // se cambia la contrasena en la base de datos
-        $stmt = $db->prepare("UPDATE USUARIOS SET CONTRASENA = ? WHERE EMAIL = ?");
-        $stmt->execute([$hashedPassword, $correo]);
+        // se busca al usuario por correo
+        $stmtUsuario = $db->prepare("SELECT NOMBRE_USUARIO FROM USUARIOS WHERE EMAIL = ?");
+        $stmtUsuario->execute([$correo]);
+        $usuario = $stmtUsuario->fetch(PDO::FETCH_ASSOC);
 
-        // si no se encontro el correo se envia un mensaje
-        if ($stmt->rowCount() === 0) {
+        if (!$usuario) {
             $respuesta['mensaje'] = 'No se encontro un usuario con ese correo electronico.';
             return $respuesta;
         }
+
+        $nombreUsuario = $usuario['NOMBRE_USUARIO'];
+
+        // se genera y guarda la nueva contraseña
+        $nuevaContrasena = generarContrasenaAleatoria();
+        $hashedPassword = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
+
+        $stmt = $db->prepare("UPDATE USUARIOS SET CONTRASENA = ? WHERE EMAIL = ?");
+        $stmt->execute([$hashedPassword, $correo]);
+
     } catch (Exception $e) {
-        // si algo sale mal al cambiar la contrasena se muestra un error
         $respuesta['mensaje'] = 'Error al actualizar la contrasena: ' . $e->getMessage();
         return $respuesta;
     }
@@ -75,28 +80,27 @@ function recuperarContrasena($correo)
         $mail->Port = 587;
         $mail->CharSet = 'UTF-8';
 
-        $mail->setFrom('espacioextra8@gmail.com', 'Novamelody Proyecto');
-
+        $mail->setFrom('espacioextra8@gmail.com', 'Novamelody');
         $mail->addAddress($correo);
 
-        $mail->Subject = '🔐 Recuperacion de Contrasena - Novamelody Proyecto';
+        $mail->Subject = '🔐 Recuperación de Contraseña - Novamelody';
 
-        // el mensaje del correo con html
         $mail->isHTML(true);
-        $mail->Body = "Hola,<br><br>Tu nueva contrasena es: <strong>$nuevaContrasena</strong><br><br>Por favor, cambiala lo antes posible.";
-        $mail->AltBody = "Hola,\n\nTu nueva contrasena es: $nuevaContrasena\n\nPor favor, cambiala lo antes posible.";
+        $mail->Body = "
+            Hola <strong>$nombreUsuario</strong>,<br><br>
+            Tu nueva contraseña es: <strong>$nuevaContrasena</strong><br><br>
+            Por favor, cámbiala lo antes posible.<br><br>
+        ";
+        $mail->AltBody = "Hola $nombreUsuario,\n\nTu nueva contraseña es: $nuevaContrasena\n\nPor favor, cámbiala lo antes posible.";
 
         $mail->send();
-
-        // si se envio bien se cambia la respuesta a exito
         $respuesta['exito'] = true;
-        $respuesta['mensaje'] = 'Se ha enviado la nueva contrasena a tu correo electronico.';
+        $respuesta['mensaje'] = 'Se ha enviado la nueva contraseña a tu correo electrónico.';
+
     } catch (Exception $e) {
-        // si hubo error al mandar el correo se muestra un mensaje
         $respuesta['mensaje'] = 'Error al enviar el correo: ' . $mail->ErrorInfo;
     }
 
-    // se devuelve la respuesta
     return $respuesta;
 }
 
