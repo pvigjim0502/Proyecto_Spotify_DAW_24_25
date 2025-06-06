@@ -75,11 +75,11 @@ function recuperarContrasena($correo)
         $mail->Port = 587;
         $mail->CharSet = 'UTF-8';
 
-        $mail->setFrom('espacioextra8@gmail.com', 'Spotify Clon Proyecto');
+        $mail->setFrom('espacioextra8@gmail.com', 'Novamelody Proyecto');
 
         $mail->addAddress($correo);
 
-        $mail->Subject = '🔐 Recuperacion de Contrasena - Spotify Clon Proyecto';
+        $mail->Subject = '🔐 Recuperacion de Contrasena - Novamelody Proyecto';
 
         // el mensaje del correo con html
         $mail->isHTML(true);
