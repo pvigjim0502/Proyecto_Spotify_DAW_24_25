@@ -582,6 +582,19 @@ function mostrarArtistas(artistas) {
 
         // ensamblamos el swiper
         contenedorSwiper.appendChild(contenedorSlides);
+
+        // añadimos flechas de navegación personalizadas con clases adicionales
+        var flechaAnterior = document.createElement('div');
+        flechaAnterior.className = 'swiper-button-prev custom-nav';
+        flechaAnterior.innerHTML = '<i class="bi bi-chevron-double-left"></i>';
+
+        var flechaSiguiente = document.createElement('div');
+        flechaSiguiente.className = 'swiper-button-next custom-nav';
+        flechaSiguiente.innerHTML = '<i class="bi bi-chevron-double-right"></i>';
+
+        contenedorSwiper.appendChild(flechaAnterior);
+        contenedorSwiper.appendChild(flechaSiguiente);
+
         contenedorArtistas.appendChild(contenedorSwiper);
 
         // iniciamos el swiper
@@ -590,6 +603,10 @@ function mostrarArtistas(artistas) {
             spaceBetween: 20,
             loop: true,
             pagination: false,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
             breakpoints: {
                 320: {
                     slidesPerView: 1,
