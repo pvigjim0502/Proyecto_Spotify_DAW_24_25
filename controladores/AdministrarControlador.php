@@ -231,6 +231,39 @@ function modificarCancion($id, $nombre, $duracion, $albumId = null, $archivoAudi
     }
 }
 
+// funcion para eliminar una cancion
+function eliminarCancion($id)
+{
+    global $db;
+    try {
+        $stmt = $db->prepare("SELECT NOMBRE, IMAGEN, AUDIO FROM CANCION WHERE CODCANCION = ?");
+        $stmt->execute([$id]);
+        $cancion = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($cancion) {
+            $nombreArchivoAudio = '/assets/audio/' . $cancion['NOMBRE'] . '.mp3';
+            $nombreArchivoImagen = '/assets/img/album/' . $cancion['NOMBRE'] . '.jpg';
+
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoAudio)) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoAudio);
+            }
+
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoImagen)) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoImagen);
+            }
+
+            $stmt = $db->prepare("DELETE FROM CANCION WHERE CODCANCION = ?");
+            $stmt->execute([$id]);
+
+            return respuesta(true, 'Canción y archivos relacionados eliminados correctamente');
+        } else {
+            return respuesta(false, 'Canción no encontrada');
+        }
+    } catch (PDOException $e) {
+        return respuesta(false, 'Error al eliminar la canción: ' . $e->getMessage());
+    }
+}
+
 // manejo de acciones
 try {
     $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
