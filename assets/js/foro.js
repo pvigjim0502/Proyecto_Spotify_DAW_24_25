@@ -209,3 +209,42 @@ function editarComentario(idComentario, comentarioActual, usuarioComentario) {
         actualizarComentario(idComentario, nuevoComentario.trim());
     }
 }
+
+async function borrarComentario(idComentario) {
+    // esta funcion borra un comentario
+    const confirmarBorrado = confirm('¿Estás seguro de que deseas eliminar este comentario?');
+
+    if (confirmarBorrado) {
+        try {
+            const usuarioNombre = obtenerCookie('usuarioNombre');
+            if (!usuarioNombre) {
+                throw new Error("Debes iniciar sesión para eliminar un comentario");
+            }
+
+            // pedimos al servidor que borre el comentario
+            const respuesta = await fetch('./controladores/ComentarioControlador.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    accion: 'borrar_comentario',
+                    idComentario: idComentario,
+                    usuarioNombre: usuarioNombre
+                })
+            });
+
+            const datos = await respuesta.json();
+
+            if (datos.exito) {
+                // si todo sale bien, mostramos un mensaje y recargamos los comentarios
+                mostrarToast('Comentario eliminado con éxito', 'exito');
+                cargarComentarios(albumSeleccionadoId);
+            } else {
+                // si hay un problema, mostramos el error del servidor
+                mostrarToast(datos.mensaje, 'error');
+            }
+        } catch (error) {
+            // si algo falla al enviar, mostramos un error
+            mostrarToast('Error al borrar el comentario: ' + error.message, 'error');
+        }
+    }
+}
