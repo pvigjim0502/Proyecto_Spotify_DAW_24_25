@@ -248,3 +248,61 @@ async function borrarComentario(idComentario) {
         }
     }
 }
+
+async function darLike(idComentario) {
+    // esta funcion pone un me gusta en un comentario
+    try {
+        // enviamos el me gusta al servidor
+        const respuesta = await fetch('./controladores/ComentarioControlador.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                accion: 'dar_like',
+                idComentario: idComentario,
+                usuarioNombre: obtenerCookie('usuarioNombre')
+            })
+        });
+
+        const datos = await respuesta.json();
+
+        if (datos.exito) {
+            // si todo sale bien, recargamos los comentarios
+            cargarComentarios(albumSeleccionadoId);
+        } else {
+            // si hay un problema, mostramos el error del servidor
+            mostrarToast(datos.mensaje, 'error');
+        }
+    } catch (error) {
+        // si algo falla al enviar, mostramos un error
+        mostrarToast('Error al dar like: ' + error.message, 'error');
+    }
+}
+
+async function darDislike(idComentario) {
+    // esta funcion pone un no me gusta en un comentario
+    try {
+        // enviamos el no me gusta al servidor
+        const respuesta = await fetch('./controladores/ComentarioControlador.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                accion: 'dar_dislike',
+                idComentario: idComentario,
+                usuarioNombre: obtenerCookie('usuarioNombre')
+            })
+        });
+
+        const datos = await respuesta.json();
+
+        if (datos.exito) {
+            // si todo sale bien, recargamos los comentarios
+            cargarComentarios(albumSeleccionadoId);
+        } else {
+            // si hay un problema, mostramos el error del servidor
+            mostrarToast(datos.mensaje, 'error');
+        }
+    } catch (error) {
+        // si algo falla al enviar, mostramos un error
+        mostrarToast('Error al dar dislike: ' + error.message, 'error');
+    }
+}
