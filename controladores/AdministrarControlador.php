@@ -143,6 +143,94 @@ function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = nul
     }
 }
 
+// funcion para actualizar una cancion
+function modificarCancion($id, $nombre, $duracion, $albumId = null, $archivoAudio = null, $imagen = null)
+{
+    global $db;
+
+    try {
+        // aqui revisamos que el id, el nombre y la duracion no esten vacios
+        if (empty($id) || empty($nombre) || empty($duracion)) {
+            return respuesta(false, 'ID, nombre y duración son obligatorios');
+        }
+
+        // aqui cambiamos los caracteres raros del nombre para poder usarlo como nombre de archivo
+        $nombreBase = str_replace([' ', '/', '\\', ':', '*', '?', '"', '<', '>', '|'], '_', $nombre);
+
+        // aqui empezamos a crear el texto que actualiza la cancion
+        $query = "UPDATE CANCION SET NOMBRE = ?, DURACION = ?";
+        $params = array($nombreBase, $duracion);
+
+        // si nos pasan un album, lo agregamos al texto que actualiza
+        if ($albumId !== null) {
+            $query .= ", CODALBUM = ?";
+            $params[] = $albumId;
+        }
+
+        // aqui revisamos si nos mandaron un archivo de audio correcto
+        if ($archivoAudio && isset($archivoAudio['error']) && $archivoAudio['error'] === 0) {
+            $extensionAudio = strtolower(pathinfo($archivoAudio['name'], PATHINFO_EXTENSION));
+
+            // aqui revisamos si el audio tiene una extension permitida
+            if ($extensionAudio != 'mp3' && $extensionAudio != 'wav' && $extensionAudio != 'ogg') {
+                return respuesta(false, 'Formato de audio no válido (solo MP3, WAV, OGG)');
+            }
+
+            // aqui cambiamos el nombre del archivo de audio para que sea como el nombre de la cancion
+            $archivoAudio['name'] = $nombreBase . '.' . $extensionAudio;
+
+            // aqui guardamos el archivo de audio
+            $rutaAudio = guardarArchivo($archivoAudio, 'audio');
+
+            // agregamos el audio al texto que actualiza
+            $query .= ", AUDIO = ?";
+            $params[] = $rutaAudio;
+        }
+
+        // aqui revisamos si nos mandaron una imagen correcta
+        if ($imagen && isset($imagen['error']) && $imagen['error'] === 0) {
+            $extensionImagen = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
+
+            // aqui revisamos si la imagen tiene una extension permitida
+            if ($extensionImagen != 'jpg' && $extensionImagen != 'jpeg' && $extensionImagen != 'png') {
+                return respuesta(false, 'Formato de imagen no válido (solo JPG, PNG)');
+            }
+
+            // aqui cambiamos el nombre de la imagen para que sea como el nombre de la cancion
+            $imagen['name'] = $nombreBase . '.' . $extensionImagen;
+
+            // aqui guardamos la imagen
+            $rutaImagen = guardarArchivo($imagen, 'imagen');
+
+            // agregamos la imagen al texto que actualiza
+            $query .= ", IMAGEN = ?";
+            $params[] = $rutaImagen;
+        }
+
+        // aqui terminamos el texto que actualiza con el id de la cancion
+        $query .= " WHERE CODCANCION = ?";
+        $params[] = $id;
+
+        // aqui preparamos y ejecutamos el texto para actualizar en la base de datos
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+
+        // aqui revisamos si se actualizo alguna fila
+        if ($stmt->rowCount() === 0) {
+            return respuesta(false, 'No se encontró una canción con el ID proporcionado');
+        }
+
+        // si todo salio bien, devolvemos que fue exitoso
+        return respuesta(true, 'Canción actualizada correctamente', array(
+            'audio' => isset($rutaAudio) ? $rutaAudio : null,
+            'imagen' => isset($rutaImagen) ? $rutaImagen : null
+        ));
+    } catch (Exception $e) {
+        // si algo falla, mostramos el error
+        return respuesta(false, 'Error: ' . $e->getMessage());
+    }
+}
+
 // manejo de acciones
 try {
     $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
