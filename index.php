@@ -10,6 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/img/favicon/favicon.png" type="image/png">
     <title>Proyecto DAW 24/25</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="assets/css/bootstrap5.3.css" rel="stylesheet">
