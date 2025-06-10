@@ -566,7 +566,6 @@ try {
             $respuesta = crearCancion($_POST['nombre'], $_POST['album_id'], $_POST['duracion'], $_FILES['archivo_audio'], $_FILES['imagen'] ?? null);
             break;
         case 'modificar_cancion':
-            $album_id = $_POST['album_id'] ?? null;
             $respuesta = modificarCancion($_POST['id'], $_POST['nombre'], $_POST['duracion'], $album_id, $_FILES['archivo_audio'] ?? null, $_FILES['imagen'] ?? null);
             break;
         case 'eliminar_cancion':
