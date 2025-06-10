@@ -829,3 +829,184 @@ footer a:hover {
     margin-top: var(--espaciado-md);
     padding-top: var(--espaciado-md);
 }
+
+/* 14. Animaciones */
+
+.animacion-revelar-pagina {
+    animation: revelarSuave 0.8s ease-out both;
+    opacity: 0;
+    transform: scale(0.99);
+}
+
+.animacion-revelar {
+    animation: revelarSuave 0.4s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.98);
+}
+    
+@keyframes revelarSuave {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 15. Media queries */
+@media (max-width: 767px) {
+    body {
+        padding-top: 3.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .navbar-nav {
+        align-items: center;
+        flex-direction: column;
+        gap: var(--espaciado-xs);
+    }
+
+    .nav-item {
+        margin: var(--espaciado-xs) 0;
+    }
+
+    .nav-item:last-child {
+        margin-top: var(--espaciado-md);
+    }
+
+    .offcanvas-start {
+        width: 75%;
+    }
+
+    .card {
+        margin-bottom: var(--espaciado-md);
+    }
+
+    .card-body {
+        padding: var(--espaciado-sm);
+    }
+
+    .card-header {
+        padding: var(--espaciado-sm);
+    }
+
+    h1,
+    .h1 {
+        font-size: 2rem;
+        margin-bottom: var(--espaciado-md);
+    }
+
+    #contenedorCanciones {
+        padding: var(--espaciado-sm);
+    }
+
+    #listaCanciones .list-group-item {
+        padding: var(--espaciado-xs);
+    }
+
+    footer {
+        padding: var(--espaciado-md) 0;
+    }
+
+    .footer-bottom {
+        margin-top: var(--espaciado-sm);
+        padding-top: var(--espaciado-sm);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    body {
+        padding-top: 4rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+        gap: var(--espaciado-sm);
+    }
+
+    .nav-item {
+        margin: 0 var(--espaciado-xs);
+    }
+
+    .offcanvas-start {
+        width: 50%;
+    }
+
+    .card {
+        margin-bottom: var(--espaciado-lg);
+    }
+
+    .card-body {
+        padding: var(--espaciado-md);
+    }
+
+    .card-header {
+        padding: var(--espaciado-md);
+    }
+
+    h1,
+    .h1 {
+        font-size: 2.25rem;
+        margin-bottom: var(--espaciado-lg);
+    }
+
+    #contenedorCanciones {
+        padding: var(--espaciado-md);
+    }
+
+    #listaCanciones .list-group-item {
+        padding: var(--espaciado-sm);
+    }
+
+    footer {
+        padding: var(--espaciado-lg) 0;
+    }
+
+    .footer-bottom {
+        margin-top: var(--espaciado-md);
+        padding-top: var(--espaciado-md);
+    }
+}
+
+@media (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .comentarios-col {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .rejilla-albumes {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .tarjeta-album {
+        padding: 0.5rem;
+    }
+
+    .contenedor-imagen-album {
+        margin-bottom: 0.4rem;
+    }
+
+    .titulo-album {
+        font-size: 0.8rem;
+    }
+
+    .año-album {
+        font-size: 0.7rem;
+    }
+}
