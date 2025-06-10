@@ -244,6 +244,25 @@ async function obtenerDatos(url) {
     }
 }
 
+async function cargarMusica() {
+    const datos = await obtenerDatos('./controladores/MusicaControlador.php');
+
+    if (datos.length > 0) {
+        mostrarAlbumes(datos);
+    } else {
+        const contenedor = document.getElementById('contenedorAlbum');
+        contenedor.innerHTML =
+            '<div class="col-12">' +
+            '<div class="alert alert-danger shadow-sm rounded-4 p-4 text-center" role="alert">' +
+            '<i class="bi bi-exclamation-triangle-fill me-2"></i>' +
+            'No se pudo cargar la música o no hay álbumes disponibles.' +
+            '</div>' +
+            '</div>';
+    }
+}
+
+cargarMusica();
+
 async function cargarArtistasAdmin() {
     try {
         // conseguir la informacion de los artistas
