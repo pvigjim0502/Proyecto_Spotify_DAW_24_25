@@ -64,12 +64,13 @@ function mostrarOlvidoContrasena() {
 }
 
 // funcion para mostrar los albumes en la pagina
+// funcion para mostrar los albumes en la pagina
 function mostrarAlbumes(albums) {
     var contenedor = document.getElementById('contenedorAlbum');
 
     // comprobamos si existe el contenedor
     if (!contenedor) {
-        console.error("No se encontró el contenedor de álbumes.");
+        console.error("no se encontró el contenedor de álbumes.");
         return;
     }
 
@@ -79,69 +80,105 @@ function mostrarAlbumes(albums) {
     }
 
     // creamos el contenedor para el carrusel
-    var swiperContainer = document.createElement('div');
-    swiperContainer.className = 'album-container w-100';
+    var contenedorSwiper = document.createElement('div');
+    contenedorSwiper.className = 'album-container w-100 position-relative';
 
-    swiperContainer.innerHTML = `
-        <div class="swiper mySwiper">
-            <div class="swiper-wrapper">
-                ${albums.map(album => `
-                    <div class="swiper-slide">
-                        <div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden">
-                            <div class="position-relative">
-                                <img src="${album.CARATULA}" class="card-img-top img-fluid rounded-top album-img" alt="${album.NOMBRE}">
-                                <div class="vista-previa p-3">
-                                    <h5 class="fw-bold">${album.NOMBRE}</h5>
-                                    <p class="mb-1"><strong>Artista:</strong> ${album.ARTISTA}</p>
-                                    <p class="mb-1"><strong>Fecha:</strong> ${album.FECHA_LANZAMIENTO}</p>
-                                    <p class="mb-0"><strong>Canciones:</strong> ${album.canciones.length}</p>
-                                </div>
-                            </div>
-                            <div class="card-body d-flex flex-column justify-content-between p-4">
-                                <h5 class="card-title fw-bold mb-3 text-truncate">${album.NOMBRE}</h5>
-                                <button class="btn-music btn btn-primary btn-lg w-100 rounded-pill shadow-sm fw-semibold"
-                                        type="button"
-                                        onclick="cargarCanciones(${album.CODALBUM})">
-                                    <i class="bi bi-music-note-list me-2"></i> Ver canciones
-                                </button>
-                            </div>
-                        </div>
+    // creamos los elementos base del swiper
+    var swiper = document.createElement('div');
+    swiper.className = 'swiper swiperAlbum';
+
+    var swiperWrapper = document.createElement('div');
+    swiperWrapper.className = 'swiper-wrapper';
+
+    // recorremos los álbumes y los insertamos
+    for (var i = 0; i < albums.length; i++) {
+        var album = albums[i];
+
+        var slide = document.createElement('div');
+        slide.className = 'swiper-slide';
+
+        slide.innerHTML = `
+            <div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden animacion-revelar">
+                <div class="position-relative">
+                    <img src="${album.CARATULA}" class="card-img-top img-fluid rounded-top album-img" alt="${album.NOMBRE}">
+                    <div class="vista-previa p-3">
+                        <h5 class="fw-bold">${album.NOMBRE}</h5>
+                        <p class="mb-1"><strong>Artista:</strong> ${album.ARTISTA}</p>
+                        <p class="mb-1"><strong>Fecha:</strong> ${album.FECHA_LANZAMIENTO}</p>
+                        <p class="mb-0"><strong>Canciones:</strong> ${album.canciones.length}</p>
                     </div>
-                `).join('')}
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between p-4">
+                    <h5 class="card-title fw-bold mb-3 text-truncate">${album.NOMBRE}</h5>
+                    <button class="btn-music btn btn-primary btn-lg w-100 rounded-pill shadow-sm fw-semibold"
+                            type="button"
+                            onclick="cargarCanciones(${album.CODALBUM})">
+                        <i class="bi bi-music-note-list me-2"></i> Ver canciones
+                    </button>
+                </div>
             </div>
-        </div>
-    `;
+        `;
 
-    // agregamos el carrusel a la pagina
-    contenedor.appendChild(swiperContainer);
+        swiperWrapper.appendChild(slide);
+    }
 
-    // ajustamos los estilos para que se vea bien
+    // ensamblamos el swiper
+    swiper.appendChild(swiperWrapper);
+
+    // añadimos flechas de navegación personalizadas con clases adicionales
+    var flechaAnterior = document.createElement('div');
+    flechaAnterior.className = 'swiper-button-prev custom-nav';
+    flechaAnterior.innerHTML = '<i class="bi bi-chevron-double-left"></i>';
+
+    var flechaSiguiente = document.createElement('div');
+    flechaSiguiente.className = 'swiper-button-next custom-nav';
+    flechaSiguiente.innerHTML = '<i class="bi bi-chevron-double-right"></i>';
+
+    swiper.appendChild(flechaAnterior);
+    swiper.appendChild(flechaSiguiente);
+
+    contenedorSwiper.appendChild(swiper);
+
+    contenedor.appendChild(contenedorSwiper);
+
+    // ajustamos el estilo del contenedor
     contenedor.style.display = 'flex';
     contenedor.style.flexDirection = 'column';
     contenedor.style.width = '100%';
     contenedor.style.minHeight = '400px';
 
-    // iniciamos el carrusel con sus opciones
-    new Swiper('.mySwiper', {
-        slidesPerView: 4,
+    // iniciamos el carrusel
+    new Swiper('.swiperAlbum', {
+        slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
         centeredSlides: false,
         autoHeight: false,
         breakpoints: {
-            1024: { slidesPerView: 4 },
-            768: { slidesPerView: 2 },
-            480: { slidesPerView: 1 }
+            480: {
+                slidesPerView: 1,
+                spaceBetween: 20
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 20
+            }
         },
-        navigation: false,
-        pagination: false,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
     });
 
-    // ajustamos los estilos del carrusel
-    const swiperElement = document.querySelector('.mySwiper');
-    if (swiperElement) {
-        swiperElement.style.width = '100%';
-        swiperElement.style.height = '100%';
+    // ajustamos estilos del swiper
+    const swiperElemento = document.querySelector('.swiperAlbum');
+    if (swiperElemento) {
+        swiperElemento.style.width = '100%';
+        swiperElemento.style.height = '100%';
     }
 }
 
