@@ -443,9 +443,9 @@ function obtenerArtistas() {
     try {
         // obtener todos los artistas de la base de datos
         $stmt = $db->query("SELECT * FROM ARTISTA");
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultadoConsulta = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (!$result) {
+        if (!$resultadoConsulta) {
             return json_encode([
                 'exito' => false,
                 'mensaje' => 'No se encontraron artistas'
@@ -454,7 +454,7 @@ function obtenerArtistas() {
 
         return json_encode([
             'exito' => true,
-            'data' => $result
+            'data' => $resultadoConsulta
         ]);
     } catch (PDOException $e) {
         error_log($e->getMessage());
@@ -475,9 +475,9 @@ function obtenerAlbumes() {
             FROM ALBUM
             INNER JOIN ARTISTA ON ALBUM.CODARTISTA = ARTISTA.CODARTISTA
         ");
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultadoConsulta = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (!$result) {
+        if (!$resultadoConsulta) {
             return json_encode([
                 'exito' => false,
                 'mensaje' => 'No se encontraron álbumes'
@@ -486,13 +486,52 @@ function obtenerAlbumes() {
 
         return json_encode([
             'exito' => true,
-            'data' => $result
+            'data' => $resultadoConsulta
         ]);
     } catch (PDOException $e) {
         error_log($e->getMessage());
         return json_encode([
             'exito' => false,
             'mensaje' => 'Error al obtener los álbumes: ' . $e->getMessage()
+        ]);
+    }
+}
+
+// funcion para obtener canciones
+function obtenerCanciones() {
+    global $db;
+    try {
+        // obtener todas las canciones con informacion del album
+        $stmt = $db->query("
+            SELECT 
+                c.CODCANCION,
+                c.NOMBRE, 
+                c.DURACION, 
+                c.AUDIO, 
+                c.IMAGEN, 
+                a.NOMBRE AS NOMBRE_ALBUM 
+            FROM CANCION c
+            LEFT JOIN ALBUM a ON c.CODALBUM = a.CODALBUM
+        ");
+        $resultadoConsulta = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // si las canciones no se encontraron
+        if (!$resultadoConsulta) {
+            return json_encode([
+                'exito' => false,
+                'mensaje' => 'No se encontraron canciones'
+            ]);
+        }
+
+        return json_encode([
+            'exito' => true,
+            'data' => $resultadoConsulta
+        ]);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        return json_encode([
+            'exito' => false,
+            'mensaje' => 'Error al obtener las canciones: ' . $e->getMessage()
         ]);
     }
 }
