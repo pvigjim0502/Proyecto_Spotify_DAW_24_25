@@ -250,6 +250,48 @@ function modificarArtista($id, $nombre, $biografia, $fechaNacimiento, $paisOrige
     }
 }
 
+function eliminarArtista($id) {
+    global $db;
+    try {
+        // verificar que el id no este vacio
+        if (empty($id)) {
+            return respuesta(false, 'El ID del artista es obligatorio.');
+        }
+
+        // iniciar la transaccion para que todo se haga bien o nada
+        $db->beginTransaction();
+
+        // verificar si el artista existe
+        $stmt = $db->prepare("SELECT COUNT(*) FROM ARTISTA WHERE CODARTISTA = ?");
+        $stmt->execute([$id]);
+        if ($stmt->fetchColumn() == 0) {
+            $db->rollBack();
+            return respuesta(false, 'El artista no existe.');
+        }
+
+        // eliminar las canciones asociadas al artista
+        $stmt = $db->prepare("DELETE FROM CANCION WHERE CODALBUM IN (SELECT CODALBUM FROM ALBUM WHERE CODARTISTA = ?)");
+        $stmt->execute([$id]);
+
+        // eliminar los albumes asociados al artista
+        $stmt = $db->prepare("DELETE FROM ALBUM WHERE CODARTISTA = ?");
+        $stmt->execute([$id]);
+
+        // eliminar el artista
+        $stmt = $db->prepare("DELETE FROM ARTISTA WHERE CODARTISTA = ?");
+        $stmt->execute([$id]);
+
+        // confirmar la transaccion
+        $db->commit();
+
+        return respuesta(true, 'Artista, álbumes y canciones eliminados correctamente.');
+    } catch (PDOException $e) {
+        // si algo sale mal, deshacer todo
+        $db->rollBack();
+        return respuesta(false, 'Error al eliminar el artista: ' . $e->getMessage());
+    }
+}
+
 // funcion para crear una cancion
 function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = null) {
     global $db;
