@@ -563,17 +563,9 @@ try {
             $respuesta = modificarAlbum($_POST['id'], $_POST['nombre'], $_POST['artista'], $_POST['fechaLanzamiento'] ?? null, $_FILES['imagen'] ?? null);
             break;
         case 'crear_cancion':
-            if (empty($_POST['nombre']) || empty($_POST['album_id']) || empty($_POST['duracion']) || empty($_FILES['archivo_audio'])) {
-                echo json_encode(['exito' => false, 'mensaje' => 'Datos incompletos']);
-                exit;
-            }
             $respuesta = crearCancion($_POST['nombre'], $_POST['album_id'], $_POST['duracion'], $_FILES['archivo_audio'], $_FILES['imagen'] ?? null);
             break;
         case 'modificar_cancion':
-            if (empty($_POST['id']) || empty($_POST['nombre']) || empty($_POST['duracion'])) {
-                echo json_encode(['exito' => false, 'mensaje' => 'Datos incompletos']);
-                exit;
-            }
             $album_id = $_POST['album_id'] ?? null;
             $respuesta = modificarCancion($_POST['id'], $_POST['nombre'], $_POST['duracion'], $album_id, $_FILES['archivo_audio'] ?? null, $_FILES['imagen'] ?? null);
             break;
