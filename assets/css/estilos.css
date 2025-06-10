@@ -764,3 +764,68 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
     box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
     outline: none;
 }
+
+/* 12. Sidebar offcanvas */
+
+.offcanvas-start {
+    background: var(--fondo-body) !important;
+    border-right: 1px solid var(--fondo-border-darker);
+    width: 300px;
+}
+
+.offcanvas-body {
+    color: var(--color-claro);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.offcanvas-body .nav-link {
+    border-radius: 8px;
+    color: var(--color-texto-secundario);
+    margin-bottom: 6px;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+}
+
+.offcanvas-body .nav-link:hover {
+    background-color: rgba(29, 185, 84, 0.1);
+    color: var(--color-claro);
+    padding-left: 20px;
+}
+
+.offcanvas-body .dropdown-menu {
+    background-color: var(--fondo-dropdown);
+    margin-left: 1rem;
+    margin-top: -0.5rem;
+}
+
+/* 13. Pie de pagina */
+
+footer {
+    background-color: var(--fondo-footer);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+    color: var(--color-texto-secundario);
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: var(--espaciado-xl) 0;
+    transition: background-color 0.3s ease;
+}
+
+footer a {
+    color: var(--color-texto-secundario);
+    display: inline-block;
+    padding: 5px 0;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: var(--color-primario);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: var(--espaciado-md);
+    padding-top: var(--espaciado-md);
+}
