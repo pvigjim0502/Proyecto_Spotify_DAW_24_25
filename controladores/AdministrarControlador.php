@@ -536,8 +536,8 @@ function obtenerCanciones() {
     }
 }
 
-function guardarArchivo($archivo, $tipo = 'imagen')
-{
+// funcion para guardar archivo
+function guardarArchivo($archivo, $tipo = 'imagen') {
     // verificacion mas detallada y descriptiva
     if (!isset($archivo) || !is_array($archivo)) {
         return respuesta(false, "El archivo no está definido o no es un arreglo válido");
@@ -547,6 +547,7 @@ function guardarArchivo($archivo, $tipo = 'imagen')
         return respuesta(false, "El archivo temporal no existe");
     }
 
+    // se definen los posibles errores que nos podriamos encontrar
     if ($archivo['error'] !== UPLOAD_ERR_OK) {
         $mensajesError = [
             UPLOAD_ERR_INI_SIZE => 'El archivo excede el tamaño máximo permitido por PHP',
