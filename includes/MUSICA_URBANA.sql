@@ -201,3 +201,7 @@ INSERT INTO CANCION (NOMBRE, DURACION, CODALBUM) VALUES
 ('CORLEONE', '00:03:10', 30),
 ('Feliz Navidad', '00:03:20', 30),
 ('Tu me calmas', '00:03:30', 30);
+
+-- Insertar el usuario administrador
+INSERT INTO usuarios (NOMBRE_USUARIO, CONTRASENA, ROL, EMAIL, FECHA_REGISTRO) 
+VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'administrador', 'admin2025@yopmail.com', NOW());
