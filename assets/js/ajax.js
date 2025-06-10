@@ -288,6 +288,19 @@ async function cargarCanciones(albumId) {
     }
 }
 
+async function cargarArtistas() {
+    const artistas = await obtenerDatos('./controladores/ArtistaControlador.php');
+
+    if (artistas.length > 0) {
+        mostrarArtistas(artistas);
+    } else {
+        console.log("No hay artistas disponibles.");
+        document.getElementById("artistas").innerHTML = "No hay artistas disponibles.";
+    }
+}
+
+cargarArtistas();
+
 async function cargarArtistasAdmin() {
     try {
         // conseguir la informacion de los artistas
