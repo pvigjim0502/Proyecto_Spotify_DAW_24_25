@@ -156,6 +156,48 @@ function eliminarAlbum($id)
     }
 }
 
+function crearArtista($nombre, $biografia, $fechaNacimiento, $paisOrigen, $imagen)
+{
+    global $db;
+    try {
+        // verificar que el nombre no este vacio
+        if (empty($nombre)) {
+            return respuesta(false, 'El nombre del artista es obligatorio.');
+        }
+
+        // verificar si el artista ya existe
+        $stmt = $db->prepare("SELECT COUNT(*) FROM ARTISTA WHERE NOMBRE = ?");
+        $stmt->execute([$nombre]);
+        if ($stmt->fetchColumn() > 0) {
+            return respuesta(false, 'Ya existe un artista con este nombre.');
+        }
+
+        // procesar imagen si se subio
+        $rutaImagen = null;
+
+        if ($imagen && $imagen['error'] === UPLOAD_ERR_OK) {
+            // validar tipo de archivo
+            $tipoArchivo = $imagen['type'];
+            $tiposPermitidos = ['image/jpeg', 'image/png', 'image/jpg'];
+
+            if (!in_array($tipoArchivo, $tiposPermitidos)) {
+                return respuesta(false, 'Tipo de archivo no válido. Debe ser JPEG o PNG.');
+            }
+
+            // guardar archivo solo si es valido
+            $rutaImagen = guardarArchivo($imagen, 'imagen');
+        }
+
+        // insertar el artista con los campos completos
+        $stmt = $db->prepare("INSERT INTO ARTISTA (NOMBRE, BIOGRAFIA, FECHA_NACIMIENTO, PAIS_ORIGEN, IMAGEN) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$nombre, $biografia, $fechaNacimiento, $paisOrigen, $rutaImagen]);
+
+        return respuesta(true, 'Artista creado correctamente.', ['rutaImagen' => $rutaImagen]);
+    } catch (Exception $e) {
+        return respuesta(false, 'Error al crear el artista: ' . $e->getMessage());
+    }
+}
+
 // funcion para crear una cancion
 function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = null)
 {
