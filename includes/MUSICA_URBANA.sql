@@ -77,3 +77,29 @@ INSERT INTO ARTISTA (CODARTISTA, NOMBRE, BIOGRAFIA, FECHA_NACIMIENTO, PAIS_ORIGE
 (13, 'J Balvin', 'José Álvaro Osorio Balvín, conocido como J Balvin, es un cantante y compositor colombiano de reguetón y pop. Nació el 7 de mayo de 1985 en Medellín, Colombia. Es uno de los artistas más reconocidos a nivel mundial, con éxitos como "Mi Gente", "Ginza" y "Rojo". Ha ganado múltiples premios, incluyendo varios Latin Grammy.', '1985-05-07', 'Colombia'),
 (14, 'Karol G', 'Carolina Giraldo Navarro, conocida como Karol G, es una cantante y compositora colombiana de reguetón y pop. Nació el 14 de febrero de 1991 en Medellín, Colombia. Es una de las artistas femeninas más influyentes del género, con álbumes como "Ocean" y "KG0516". Ha colaborado con artistas como Nicki Minaj, Anuel AA y J Balvin.', '1991-02-14', 'Colombia'),
 (15, 'Feid', 'Salomón Villada Hoyos, conocido como Feid, es un cantante y compositor colombiano de reguetón y música urbana. Nació el 19 de agosto de 1992 en Medellín, Colombia. Es conocido por su estilo único y álbumes como "19" y "FERXXO (VOL 1: M.O.R)". Ha trabajado con artistas como J Balvin, Maluma y Sech.', '1992-08-19', 'Colombia');
+
+-- Insertar álbumes
+INSERT INTO ALBUM (CODALBUM, NOMBRE, FECHA_LANZAMIENTO, CODARTISTA, CARATULA) VALUES
+(1, 'Real Hasta La Muerte', '2018-07-17', 2, '/assets/img/album/real_hasta_la_muerte.jpg'),
+(2, 'Ferxxocalipsis', '2021-10-29', 15, '/assets/img/album/ferxxocalipsis.jpg'),
+(4, 'X 100PRE', '2018-12-24', 1, '/assets/img/album/x_100pre.jpg'),
+(5, 'YHLQMDLG', '2020-02-29', 1, '/assets/img/album/yhlqmdlg.jpg'),
+(6, 'EL ÚLTIMO TOUR DEL MUNDO', '2020-11-27', 1, '/assets/img/album/el_ultimo_tour_del_mundo.jpg'),
+(7, 'Un Verano Sin Ti', '2022-05-06', 1, '/assets/img/album/un_verano_sin_ti.jpg'),
+(8, 'Nadie sabe lo que va a pasar mañana', '2023-10-13', 1, '/assets/img/album/nadie_sabe_lo_que_va_a_pasar_manana.jpg'),
+(9, 'DeBÍ TiRAR MáS FOToS', '2025-01-05', 1, '/assets/img/album/debi_tirar_mas_fotos.jpg'),
+(10, 'Emmanuel', '2020-05-29', 2, '/assets/img/album/emmanuel.jpg'),
+(11, 'Las Leyendas Nunca Mueren', '2021-11-05', 2, '/assets/img/album/las_leyendas_nunca_mueren.jpg'),
+(12, 'Los Dioses', '2021-01-22', 2, '/assets/img/album/los_dioses.jpg'),
+(13, 'LLNM2', '2022-11-18', 2, '/assets/img/album/llnm2.jpg'),
+(14, 'Destino 2014', '2024-12-15', 5, '/assets/img/album/destino_2014.jpg'),
+(15, 'Buenas Noches', '2024-11-22', 7, '/assets/img/album/buenas_noches.jpg'),
+(16, 'Le Clique: Vida Rockstar (X)', '2024-09-06', 11, '/assets/img/album/le_clique_vida_rockstar_x.jpg'),
+(17, 'Mañana Será Bonito', '2023-02-24', 14, '/assets/img/album/manana_sera_bonito.jpg'),
+(18, '3MEN2 KBRN', '2023-03-10', 4, '/assets/img/album/3men2_kbrn.jpg'),
+(20, 'Microdosis', '2023-07-14', 6, '/assets/img/album/microdosis.jpg'),
+(21, 'Ozutochi', '2023-08-11', 12, '/assets/img/album/ozutochi.jpg'),
+(22, 'Saturno', '2023-09-15', 10, '/assets/img/album/saturno.jpg'),
+(28, 'Feliz Cumpleaños Ferxxo', '2023-03-17', 15, '/assets/img/album/feliz_cumpleanos_ferxxo.jpg'),
+(29, 'Sakura', '2024-01-12', 9, '/assets/img/album/sakura.jpg'),
+(30, 'Saliendo del Planeta', '2024-01-12', 9, '/assets/img/album/saliendo_del_planeta.jpg');
