@@ -1,7 +1,9 @@
 /* 1. Importaciones */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* 2. Variables CSS */
+/* 2. Variables css */
+
 :root {
     --color-primario: #1DB954;
     --color-primario-oscuro: #178c42;
@@ -14,8 +16,21 @@
 
     --fondo-body: #121212;
     --color-texto-body: #FFFFFF;
+    --color-texto-secundario: #B3B3B3;
+    --color-texto-muted: #a0a0a0;
+    --color-texto-input: #909090;
     --fondo-header: #000000;
     --fondo-footer: #191414;
+    --fondo-card: #181818;
+    --fondo-card-hover: #212121;
+    --fondo-dropdown: #212121;
+    --fondo-input: #2A2A2A;
+    --fondo-border: #333333;
+    --fondo-border-light: #3A3A3A;
+    --fondo-border-darker: #2A2A2A;
+    --fondo-hover: #282828;
+    --color-tarjeta-fondo: #181818;
+    --color-tarjeta-fondo-hover: #212121;
 
     --espaciado-xs: 0.5rem;
     --espaciado-sm: 1rem;
@@ -29,6 +44,7 @@
 }
 
 /* 3. Estilos base */
+
 body {
     background-color: var(--fondo-body);
     color: var(--color-texto-body);
@@ -64,10 +80,16 @@ textarea:focus::placeholder {
 
 input,
 textarea {
-    color: #ffffff !important;
+    color: var(--color-claro) !important;
+}
+
+::selection {
+    background-color: var(--color-primario);
+    color: var(--color-claro);
 }
 
 /* 4. Tipografia */
+
 h1,
 .h1 {
     color: var(--color-primario);
@@ -87,6 +109,7 @@ h6 {
 }
 
 /* 5. Encabezado y navegacion */
+
 #cabecera {
     background-color: var(--fondo-header);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -104,7 +127,7 @@ h6 {
 
 .nav-link {
     border-radius: 6px;
-    color: #B3B3B3;
+    color: var(--color-texto-secundario);
     font-weight: 500;
     margin: 0 3px;
     padding: var(--espaciado-xs) var(--espaciado-sm);
@@ -117,7 +140,7 @@ h6 {
 }
 
 .dropdown-menu {
-    background-color: #212121;
+    background-color: var(--fondo-dropdown);
     border: none;
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
@@ -135,22 +158,22 @@ h6 {
 }
 
 .navbar-dark .navbar-nav .dropdown-item {
-    color: #FFFFFF;
+    color: var(--color-claro);
     padding: 10px 16px;
     transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .navbar-dark .navbar-nav .dropdown-item:hover {
     background-color: rgba(29, 185, 84, 0.2);
-    color: #FFFFFF;
+    color: var(--color-claro);
 }
 
 body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-menu {
-    background-color: #212121;
+    background-color: var(--fondo-dropdown);
 }
 
 body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item {
-    color: #FFFFFF;
+    color: var(--color-claro);
 }
 
 body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
@@ -159,6 +182,7 @@ body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
 }
 
 /* 6. Contenido principal */
+
 #pagina-inicio {
     flex: 1;
     margin-bottom: var(--espaciado-md);
@@ -171,7 +195,7 @@ body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
 }
 
 #contenedorCanciones {
-    background-color: #181818;
+    background-color: var(--fondo-card);
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 24px;
@@ -180,8 +204,8 @@ body:not(.dark-mode) .navbar-dark .navbar-nav .dropdown-item:hover {
 #listaCanciones .list-group-item {
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid #2A2A2A;
-    color: #FFFFFF;
+    border-bottom: 1px solid var(--fondo-border-darker);
+    color: var(--color-claro);
     padding: 14px 16px;
 }
 
@@ -206,45 +230,45 @@ table {
     border-collapse: collapse;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     width: 100%;
-    background-color: #121212;
-    color: #ffffff !important;
+    background-color: var(--fondo-body);
+    color: var(--color-claro) !important;
     text-align: center;
 }
 
 td {
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid var(--fondo-border);
     padding: 12px 15px;
     vertical-align: middle;
     text-align: center;
-    color: #ffffff !important;
+    color: var(--color-claro) !important;
 }
 
 .celda-album,
 .celda-artista {
-    color: #ffffff !important;
+    color: var(--color-claro) !important;
     width: 15%;
     text-align: center;
 }
 
 .celda-bio {
-    color: #ffffff !important;
+    color: var(--color-claro) !important;
     width: 35%;
     text-align: center;
 }
 
 .celda-duracion {
-    color: #a0a0a0;
+    color: var(--color-texto-muted);
     text-align: center;
     width: 10%;
 }
 
 .celda-fecha {
-    color: #a0a0a0;
+    color: var(--color-texto-muted);
     width: 15%;
 }
 
 .celda-id {
-    color: #ffffff;
+    color: var(--color-claro);
     font-weight: bold;
     text-align: center;
     width: 5%;
@@ -256,13 +280,13 @@ td {
 }
 
 .celda-nombre {
-    color: #ffffff;
+    color: var(--color-claro);
     font-weight: 600;
     width: 20%;
 }
 
 .celda-pais {
-    color: #b3b3b3;
+    color: var(--color-texto-secundario);
     width: 15%;
 }
 
@@ -274,29 +298,110 @@ td {
 }
 
 tr {
-    background-color: #121212 !important;
+    background-color: var(--fondo-body) !important;
     transition: background-color 0.2s ease;
 }
 
 tr:hover {
-    background-color: #282828 !important;
+    background-color: var(--fondo-hover) !important;
+}
+
+.grid-container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 2fr 1fr;
+    margin-bottom: 1.5rem;
+}
+
+.comentarios-col {
+    grid-column: span 2;
+}
+
+#contenidoPerfil .badge {
+    background-color: var(--color-exito);
+    color: var(--color-oscuro);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+}
+
+.rejilla-albumes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.tarjeta-album {
+    background-color: var(--color-tarjeta-fondo);
+    border-radius: 8px;
+    padding: 0.75rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.tarjeta-album:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    background-color: var(--color-tarjeta-fondo-hover);
+}
+
+.contenedor-imagen-album {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.portada-album {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.info-album {
+    text-align: left;
+    padding: 0 0.25rem;
+}
+
+.titulo-album {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-texto-body);
+}
+
+.año-album {
+    font-size: 0.75rem;
+    color: var(--color-texto-secundario);
 }
 
 /* 7. Componentes de busqueda */
+
 .search-input {
-    background-color: #2A2A2A !important;
+    background-color: var(--fondo-input) !important;
     border: 1px solid #535353;
     border-radius: 8px;
-    color: #FFFFFF;
+    color: var(--color-claro);
     padding: 10px 16px;
     transition: all 0.3s ease;
 }
 
 body.dark-mode .search-input {
     position: relative;
-    background-color: #2A2A2A !important;
-    border-color: #3A3A3A;
-    color: #FFFFFF;
+    background-color: var(--fondo-input) !important;
+    border-color: var(--fondo-border-light);
+    color: var(--color-claro);
 }
 
 #resultadosBusqueda {
@@ -316,10 +421,10 @@ body.dark-mode .search-input {
 }
 
 #resultadosBusqueda h6.text-light {
-    color: #b3b3b3 !important;
+    color: var(--color-texto-secundario) !important;
     margin-top: 0;
     padding: 8px 15px;
-    border-bottom: 1px solid #3A3A3A;
+    border-bottom: 1px solid var(--fondo-border-light);
 }
 
 #resultadosBusqueda ul.list-unstyled {
@@ -329,7 +434,7 @@ body.dark-mode .search-input {
 
 #resultadosBusqueda li.search-result-item {
     padding: 8px 15px;
-    border-bottom: 1px solid #3A3A3A;
+    border-bottom: 1px solid var(--fondo-border-light);
 }
 
 #resultadosBusqueda li.search-result-item:last-child {
@@ -342,7 +447,7 @@ body.dark-mode .search-input {
 }
 
 #resultadosBusqueda li.search-result-item a:hover {
-    background-color: #333333;
+    background-color: var(--fondo-border);
     border-radius: 4px;
 }
 
@@ -353,17 +458,17 @@ body.dark-mode .search-input {
 }
 
 #resultadosBusqueda .search-item-title {
-    color: #FFFFFF;
+    color: var(--color-claro);
     margin-bottom: 2px;
 }
 
 #resultadosBusqueda .search-item-subtitle {
-    color: #B3B3B3;
+    color: var(--color-texto-secundario);
     font-size: 0.9rem;
 }
 
 #resultadosBusqueda .search-album-link {
-    color: #FFFFFF !important;
+    color: var(--color-claro) !important;
     text-decoration: none !important;
 }
 
@@ -382,7 +487,7 @@ body.dark-mode .search-input {
 }
 
 #resultadosBusqueda .search-artist-link {
-    color: #FFFFFF !important;
+    color: var(--color-claro) !important;
     text-decoration: none !important;
     display: flex;
     flex-direction: column;
@@ -402,7 +507,7 @@ body.dark-mode .search-input {
 }
 
 #resultadosBusqueda .text-muted {
-    color: #B3B3B3 !important;
+    color: var(--color-texto-secundario) !important;
 }
 
 #resultadosBusqueda .text-primary {
@@ -424,27 +529,27 @@ body.dark-mode .search-input {
 }
 
 body.dark-mode #resultadosBusqueda .list-group-flush .list-group-item {
-    background-color: #282828 !important;
-    color: #FFFFFF;
+    background-color: var(--fondo-hover) !important;
+    color: var(--color-claro);
 }
 
 body.dark-mode #resultadosBusqueda .list-group-item {
-    background-color: #282828 !important;
-    color: #FFFFFF;
+    background-color: var(--fondo-hover) !important;
+    color: var(--color-claro);
 }
 
 body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.border-0.py-2 {
-    background-color: #282828 !important;
-    color: #FFFFFF;
+    background-color: var(--fondo-hover) !important;
+    color: var(--color-claro);
 }
 
 body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.border-0.py-2:hover {
-    background-color: #333333 !important;
-    color: #FFFFFF;
+    background-color: var(--fondo-border) !important;
+    color: var(--color-claro);
 }
 
 #buscador .card {
-    border: 1px solid #333333 !important;
+    border: 1px solid var(--fondo-border) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     transition: all 0.3s ease;
 }
@@ -455,41 +560,42 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
 }
 
 #buscador .card:focus-within {
-    border-color: #1db954 !important;
+    border-color: var(--color-primario) !important;
     box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.3) !important;
 }
 
 #buscar::placeholder {
-    color: #909090 !important;
+    color: var(--color-texto-input) !important;
 }
 
 #resultadosBusqueda {
-    border: 1px solid #333333 !important;
+    border: 1px solid var(--fondo-border) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
 }
 
 #contenedorResultados .list-group-item:hover {
-    background-color: #282828 !important;
+    background-color: var(--fondo-hover) !important;
 }
 
 #contenedorResultados .list-group-item.active {
-    background-color: #333333 !important;
-    border-left: 3px solid #1db954 !important;
+    background-color: var(--fondo-border) !important;
+    border-left: 3px solid var(--color-primario) !important;
 }
 
 /* 8. Tarjetas */
+
 .card {
-    background-color: #181818;
+    background-color: var(--fondo-card);
     border: none;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    color: #FFFFFF;
+    color: var(--color-claro);
     overflow: hidden;
     transition: all 0.2s ease;
 }
 
 .card:hover {
-    background-color: #212121;
+    background-color: var(--fondo-card-hover);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
@@ -499,11 +605,12 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
 
 .card-header {
     background-color: transparent;
-    border-bottom: 1px solid #2A2A2A;
+    border-bottom: 1px solid var(--fondo-border-darker);
     padding: var(--espaciado-md);
 }
 
 /* 9. Imagenes y previsualizacion */
+
 .album-img {
     aspect-ratio: 1 / 1;
     border-radius: 8px;
@@ -520,7 +627,7 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
     backdrop-filter: blur(4px);
     border-radius: 8px;
     bottom: 0;
-    color: white;
+    color: var(--color-claro);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -574,6 +681,7 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
 }
 
 /* 10. Botones */
+
 .btn-primary {
     background-color: var(--color-primario);
     border-color: var(--color-primario);
@@ -591,13 +699,12 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
 }
 
 .btn-music {
-    animation: gradientMove 5s infinite ease-in-out;
-    background: linear-gradient(135deg, #1DB954, #1ED760);
+    background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
     background-size: 200% 200%;
     border: none;
     border-radius: 50px;
     box-shadow: 0 6px 16px rgba(29, 185, 84, 0.25);
-    color: white;
+    color: var(--color-claro);
     cursor: pointer;
     display: inline-block;
     font-size: 1.1rem;
@@ -621,4 +728,39 @@ body.dark-mode #resultadosBusqueda .list-group-item.list-group-item-action.borde
 
 .btn-music i {
     transition: all 0.3s ease-in-out;
+}
+
+/* 11. Comentarios */
+
+#contenedorComentarios {
+    background-color: var(--fondo-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    margin-top: var(--espaciado-md);
+    padding: var(--espaciado-md);
+}
+
+#contenedorComentarios hr {
+    border-color: var(--fondo-border-darker);
+    margin: var(--espaciado-md) 0;
+}
+
+#comentarios {
+    color: var(--color-claro);
+    margin-bottom: var(--espaciado-md);
+}
+
+#comentarioInput {
+    background-color: var(--fondo-input);
+    border: 1px solid var(--fondo-border-light);
+    border-radius: 8px;
+    color: var(--color-claro);
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+}
+
+#comentarioInput:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
+    outline: none;
 }
