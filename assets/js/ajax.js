@@ -259,6 +259,35 @@ async function cargarMusica() {
 
 cargarMusica();
 
+var albumSeleccionadoId = 0;
+
+async function cargarCanciones(albumId) {
+    albumSeleccionadoId = albumId;
+
+    const datos = await obtenerDatos('./controladores/MusicaControlador.php');
+
+    // si los datos tienen albums, seguimos
+    if (datos.length && datos[0].albums) {
+        const todosLosAlbums = datos[0].albums;
+
+        var albumSeleccionado = null;
+        for (var i = 0; i < todosLosAlbums.length; i++) {
+            if (todosLosAlbums[i].CODALBUM == albumId) {
+                albumSeleccionado = todosLosAlbums[i];
+                break;
+            }
+        }
+
+        if (albumSeleccionado) {
+            mostrarDetalleAlbum(albumSeleccionado);
+        } else {
+            mostrarToast('No se encontró el álbum', 'error');
+        }
+    } else {
+        mostrarToast('Error al cargar los datos del álbum', 'error');
+    }
+}
+
 async function cargarArtistasAdmin() {
     try {
         // conseguir la informacion de los artistas
