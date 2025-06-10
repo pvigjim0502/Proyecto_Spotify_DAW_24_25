@@ -6,8 +6,7 @@ require_once __DIR__ . '/../includes/funciones.php';
 $db = obtenerConexion();
 
 // funcion para crear un album
-function crearAlbum($nombre, $artista, $fechaLanzamiento, $imagen)
-{
+function crearAlbum($nombre, $artista, $fechaLanzamiento, $imagen) {
     global $db;
     try {
         // si algun campo esta vacio, se lanza una excepcion
@@ -43,8 +42,7 @@ function crearAlbum($nombre, $artista, $fechaLanzamiento, $imagen)
 }
 
 // funcion para actualizar un album
-function actualizarAlbum($id, $nombre, $artista, $fechaLanzamiento = null, $imagen = null)
-{
+function actualizarAlbum($id, $nombre, $artista, $fechaLanzamiento = null, $imagen = null) {
     global $db;
     try {
         // consulta para actualizar nombre y codartista
@@ -117,8 +115,7 @@ function actualizarAlbum($id, $nombre, $artista, $fechaLanzamiento = null, $imag
 }
 
 // funcion para eliminar un album
-function eliminarAlbum($id)
-{
+function eliminarAlbum($id) {
     global $db;
     try {
         // verificar que el id no este vacio
@@ -156,8 +153,7 @@ function eliminarAlbum($id)
     }
 }
 
-function crearArtista($nombre, $biografia, $fechaNacimiento, $paisOrigen, $imagen)
-{
+function crearArtista($nombre, $biografia, $fechaNacimiento, $paisOrigen, $imagen) {
     global $db;
     try {
         // verificar que el nombre no este vacio
@@ -198,9 +194,64 @@ function crearArtista($nombre, $biografia, $fechaNacimiento, $paisOrigen, $image
     }
 }
 
+function modificarArtista($id, $nombre, $biografia, $fechaNacimiento, $paisOrigen, $imagen = null) {
+    global $db;
+    try {
+        // verificar que los campos obligatorios no esten vacios
+        if (empty($id) || empty($nombre)) {
+            return respuesta(false, 'El ID y el nombre del artista son obligatorios.');
+        }
+
+        // verificar que el artista exista
+        $stmt = $db->prepare("SELECT COUNT(*) FROM ARTISTA WHERE CODARTISTA = ?");
+        $stmt->execute([$id]);
+        if ($stmt->fetchColumn() == 0) {
+            return respuesta(false, 'El artista no existe.');
+        }
+
+        // preparar la consulta y parametros
+        $query = "UPDATE ARTISTA SET NOMBRE = ?, BIOGRAFIA = ?, FECHA_NACIMIENTO = ?, PAIS_ORIGEN = ?";
+        $params = [$nombre, $biografia, $fechaNacimiento, $paisOrigen];
+
+        // manejar subida de imagen si se proporciono
+        $rutaImagen = null;
+        if ($imagen && is_array($imagen) && isset($imagen['tmp_name']) && $imagen['error'] === UPLOAD_ERR_OK) {
+            // validar tipo de imagen
+            $tipoArchivo = $imagen['type'];
+            $tiposPermitidos = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (!in_array($tipoArchivo, $tiposPermitidos)) {
+                return respuesta(false, 'Tipo de archivo no válido. Debe ser JPEG o PNG.');
+            }
+
+            // guardar la nueva imagen
+            $rutaImagen = guardarArchivo($imagen, 'imagen');
+            $query = $query . ", IMAGEN = ?";
+            $params[] = $rutaImagen;
+        }
+
+        // completar la consulta
+        $query = $query . " WHERE CODARTISTA = ?";
+        $params[] = $id;
+
+        // ejecutar la actualizacion
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+
+        $mensaje = 'Artista modificado correctamente';
+        if ($rutaImagen) {
+            $mensaje = $mensaje . ' con nueva imagen';
+        } else {
+            $mensaje = $mensaje . ' sin cambiar imagen';
+        }
+
+        return respuesta(true, $mensaje);
+    } catch (Exception $e) {
+        return respuesta(false, 'Error al modificar el artista: ' . $e->getMessage());
+    }
+}
+
 // funcion para crear una cancion
-function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = null)
-{
+function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = null) {
     global $db;
     try {
         // verificar que los datos principales no esten vacios
@@ -235,8 +286,7 @@ function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = nul
 }
 
 // funcion para actualizar una cancion
-function modificarCancion($id, $nombre, $duracion, $albumId = null, $archivoAudio = null, $imagen = null)
-{
+function modificarCancion($id, $nombre, $duracion, $albumId = null, $archivoAudio = null, $imagen = null) {
     global $db;
     try {
         // aqui revisamos que el id, el nombre y la duracion no esten vacios
@@ -308,8 +358,7 @@ function modificarCancion($id, $nombre, $duracion, $albumId = null, $archivoAudi
 }
 
 // funcion para eliminar una cancion
-function eliminarCancion($id)
-{
+function eliminarCancion($id) {
     global $db;
     try {
         $stmt = $db->prepare("SELECT NOMBRE, IMAGEN, AUDIO FROM CANCION WHERE CODCANCION = ?");
