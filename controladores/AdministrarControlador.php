@@ -411,14 +411,17 @@ function eliminarCancion($id) {
             $nombreArchivoAudio = '/assets/audio/' . $cancion['NOMBRE'] . '.mp3';
             $nombreArchivoImagen = '/assets/img/album/' . $cancion['NOMBRE'] . '.jpg';
 
+            // si existe el archivo de audio de la cancion y se va a borrar para no ocupar espacio
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoAudio)) {
                 unlink($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoAudio);
             }
 
+            // si existe el archivo de imagen de la cancion y se va a borrar para no ocupar espacio
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoImagen)) {
                 unlink($_SERVER['DOCUMENT_ROOT'] . $nombreArchivoImagen);
             }
 
+            // hacemos la consulta para borrar la cancion de la base de datos
             $stmt = $db->prepare("DELETE FROM CANCION WHERE CODCANCION = ?");
             $stmt->execute([$id]);
 
@@ -429,6 +432,15 @@ function eliminarCancion($id) {
     } catch (PDOException $e) {
         return respuesta(false, 'Error al eliminar la canción: ' . $e->getMessage());
     }
+}
+
+// funcion para generar respuestas json
+function respuesta($exito, $mensaje, $data = null) {
+    return json_encode([
+        'exito' => $exito,
+        'mensaje' => $mensaje,
+        'data' => $data
+    ]);
 }
 
 // manejo de acciones
