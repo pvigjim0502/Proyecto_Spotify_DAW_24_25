@@ -204,6 +204,28 @@ async function cargarMiPerfil(evento) {
     }
 }
 
+async function cerrarSesion() {
+    const respuesta = await fetch('./controladores/CerrarSesionControlador.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const datos = await respuesta.json();
+
+    if (datos.success) {
+        borrarCookie('sesionActiva');
+        borrarCookie('usuarioNombre');
+        borrarCookie('esAdmin');
+        borrarCookie('ultimaPagina');
+
+        window.location.href = './index.php';
+    } else {
+        mostrarToast('Error al cerrar la sesión: ' + datos.error, 'error');
+    }
+}
+
 async function obtenerDatos(url) {
     try {
         const respuesta = await fetch(url);
