@@ -60,7 +60,7 @@ ALTER TABLE COMENTARIOS ADD COLUMN DISLIKES INT DEFAULT 0;
 
 SET SQL_SAFE_UPDATES = 0;
 
--- Insertar artista
+-- Insertar artistas
 INSERT INTO ARTISTA (CODARTISTA, NOMBRE, BIOGRAFIA, FECHA_NACIMIENTO, PAIS_ORIGEN) VALUES
 (1, 'Bad Bunny', 'Benito Antonio Martínez Ocasio, conocido como Bad Bunny, es un cantante, compositor y productor puertorriqueño de reguetón y trap latino. Nació el 10 de marzo de 1994 en Vega Baja, Puerto Rico. Saltó a la fama en 2016 con su sencillo "Soy Peor" y desde entonces ha dominado la escena musical con álbumes como "X 100pre", "YHLQMDLG" y "Un Verano Sin Ti", este último ganador de un Grammy. Es conocido por su estilo único, fusionando reguetón con otros géneros como rock, salsa y música electrónica.', '1994-03-10', 'Puerto Rico'),
 (2, 'Anuel AA', 'Emmanuel Gazmey Santiago, conocido como Anuel AA, es un cantante y compositor puertorriqueño de reguetón y trap latino. Nació el 27 de noviembre de 1992 en Carolina, Puerto Rico. Comenzó su carrera en 2010, pero alcanzó la fama internacional en 2016 con su álbum "Real Hasta la Muerte". Es reconocido por su estilo crudo y letras explícitas, así como por colaboraciones con artistas como Karol G, Ozuna y Daddy Yankee.', '1992-11-27', 'Puerto Rico'),
@@ -103,3 +103,101 @@ INSERT INTO ALBUM (CODALBUM, NOMBRE, FECHA_LANZAMIENTO, CODARTISTA, CARATULA) VA
 (28, 'Feliz Cumpleaños Ferxxo', '2023-03-17', 15, '/assets/img/album/feliz_cumpleanos_ferxxo.jpg'),
 (29, 'Sakura', '2024-01-12', 9, '/assets/img/album/sakura.jpg'),
 (30, 'Saliendo del Planeta', '2024-01-12', 9, '/assets/img/album/saliendo_del_planeta.jpg');
+
+-- Insertar canciones
+INSERT INTO CANCION (NOMBRE, DURACION, CODALBUM) VALUES
+-- Álbum 1: Real Hasta La Muerte (Anuel AA)
+('Brindemos', '00:03:45', 1),
+('Ella Quiere Beber', '00:03:30', 1),
+('Culpables', '00:03:50', 1),
+('Prisionero', '00:03:45', 1),
+
+-- Álbum 2: Ferxxocalipsis (Feid)
+('Ferxxo 100', '00:03:15', 2),
+('Vacaxiones', '00:03:42', 2),
+('Normal', '00:03:25', 2),
+
+-- Álbum 4: X 100PRE (Bad Bunny)
+('Mía', '00:03:30', 4),
+('Solo de Mí', '00:03:20', 4),
+('Caro', '00:03:45', 4),
+
+-- Álbum 5: YHLQMDLG (Bad Bunny)
+('Vete', '00:03:12', 5),
+('La Santa', '00:03:26', 5),
+('Yo Perreo Sola', '00:02:52', 5),
+
+-- Álbum 6: EL ÚLTIMO TOUR DEL MUNDO (Bad Bunny)
+('Dákiti', '00:03:25', 6),
+('Booker T', '00:02:50', 6),
+('La Noche de Anoche', '00:03:23', 6),
+
+-- Álbum 7: Un Verano Sin Ti (Bad Bunny)
+('Moscow Mule', '00:04:05', 7),
+('Tití Me Preguntó', '00:04:03', 7),
+('Ojitos Lindos', '00:03:45', 7),
+('Me Porto Bonito', '00:03:30', 7),
+
+-- Álbum 8: Nadie sabe lo que va a pasar mañana (Bad Bunny)
+('Monaco', '00:04:27', 8),
+('Fina', '00:03:24', 8),
+('Perro Negro', '00:03:20', 8),
+
+-- Álbum 9: DeBÍ TiRAR MáS FOToS (Bad Bunny)
+('DtMF', '00:03:15', 9),
+('La Mudanza', '00:03:30', 9),
+('Baile Inolvidable', '00:03:45', 9),
+
+-- Álbum 10: Emmanuel (Anuel AA)
+('China', '00:03:20', 10),
+('Fútbol y Rumba', '00:03:41', 10),
+('No Llores Mujer', '00:03:50', 10),
+
+-- Álbum 11: Las Leyendas Nunca Mueren (Anuel AA)
+('Leyenda', '00:03:45', 11),
+('23 Preguntas', '00:03:18', 11),
+
+-- Álbum 12: Los Dioses (Anuel AA & Ozuna)
+('Los Dioses', '00:04:38', 12),
+('100 Millones', '00:03:55', 12),
+
+-- Álbum 13: LLNM2 (Anuel AA)
+('Más Rica Que Ayer', '00:03:20', 13),
+('Mejor Que Yo', '00:03:30', 13),
+
+-- Álbum 17: Mañana Será Bonito (Karol G)
+('TQG', '00:03:18', 17),
+('Provenza', '00:03:30', 17),
+('Cairo', '00:03:25', 17),
+
+-- Álbum 18: Destino 2014 (Eladio Carrión)
+('Coco Chanel', '00:03:15', 18),
+('Kemba Walker', '00:03:20', 18),
+('Mbappe', '00:03:30', 18),
+
+-- Álbum 20: Microdosis (Mora)
+('Pégate', '00:03:10', 20),
+('512', '00:03:45', 20),
+
+-- Álbum 21: Ozutochi (Ozuna)
+('Ozutochi', '00:03:30', 21),
+('Tokyo', '00:03:45', 21),
+
+-- Álbum 22: Saturno (Rauw Alejandro)
+('Desesperados', '00:03:44', 22),
+('Todo de Ti', '00:03:20', 22),
+
+-- Álbum 28: Feliz cumpleaños Ferxxo (Feid)
+('Normal', '00:03:10', 28),
+('Feliz Cumpleaños Ferxxo', '00:03:20', 28),
+('Chorrito Pa las Animas', '00:03:30', 28),
+
+-- Álbum 29: Sakura (Saiko)
+('BOREAL', '00:03:10', 29),
+('HEY BB', '00:03:20', 29),
+('COMETA HALLEY', '00:03:30', 29),
+
+-- Álbum 30: Saliendo del Planeta (Saiko)
+('CORLEONE', '00:03:10', 30),
+('Feliz Navidad', '00:03:20', 30),
+('Tu me calmas', '00:03:30', 30);
