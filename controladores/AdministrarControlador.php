@@ -43,32 +43,76 @@ function crearAlbum($nombre, $artista, $fechaLanzamiento, $imagen)
 }
 
 // funcion para actualizar un album
-function actualizarAlbum($id, $nombre, $artista, $imagen = null)
+function actualizarAlbum($id, $nombre, $artista, $fechaLanzamiento = null, $imagen = null)
 {
     global $db;
     try {
         // consulta para actualizar nombre y codartista
+        if (empty($id) || empty($nombre) || empty($artista)) {
+            return respuesta(false, 'ID, nombre y artista son obligatorios.');
+        }
+
+        // verificar que el album exista
+        $stmt = $db->prepare("SELECT CARATULA FROM ALBUM WHERE CODALBUM = ?");
+        $stmt->execute([$id]);
+        $album = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$album) {
+            return respuesta(false, 'El álbum no existe');
+        }
+
+        // empezar la actualizacion de datos
+        $rutaImagen = null;
+        $actualizarImagen = false;
+
+        // verificar si se subio una nueva imagen
+        if ($imagen && is_array($imagen) && isset($imagen['tmp_name']) && $imagen['error'] === UPLOAD_ERR_OK) {
+            $rutaImagen = guardarArchivo($imagen, 'album');
+            $actualizarImagen = true;
+        }
+
+        // empezar transaccion para que todo se haga bien o nada
+        $db->beginTransaction();
+
+        // preparar la consulta base
         $query = "UPDATE ALBUM SET NOMBRE = ?, CODARTISTA = ?";
         $params = [$nombre, $artista];
 
-        // si hay imagen nueva se guarda y se añade a la consulta
-        if ($imagen) {
-            $rutaImagen = guardarArchivo($imagen, 'album');
-            $query .= ", CARATULA = ?";
+        // agregar fecha si se proporciono
+        if ($fechaLanzamiento) {
+            $query = $query . ", FECHA_LANZAMIENTO = ?";
+            $params[] = $fechaLanzamiento;
+        }
+
+        // agregar imagen si se subio una nueva
+        if ($actualizarImagen) {
+            $query = $query . ", CARATULA = ?";
             $params[] = $rutaImagen;
         }
 
-        // condicion para actualizar el album especifico
-        $query .= " WHERE CODALBUM = ?";
+        // agregar condicion para actualizar solo este album
+        $query = $query . " WHERE CODALBUM = ?";
         $params[] = $id;
 
-        // preparar y ejecutar la consulta
+        // ejecutar la actualizacion
         $stmt = $db->prepare($query);
         $stmt->execute($params);
 
-        return respuesta(true, 'Álbum actualizado correctamente');
-    } catch (PDOException $e) {
-        return respuesta(false, 'Error al actualizar el álbum: ' . $e->getMessage());
+        // confirmar que todo salio bien
+        $db->commit();
+
+        $mensaje = 'Álbum modificado correctamente';
+        if ($actualizarImagen) {
+            $mensaje = $mensaje . ' con nueva imagen';
+        } else {
+            $mensaje = $mensaje . ' sin cambiar imagen';
+        }
+
+        return respuesta(true, $mensaje);
+    } catch (Exception $e) {
+        // si algo sale mal, deshacer todo
+        $db->rollBack();
+        return respuesta(false, 'Error al modificar el álbum: ' . $e->getMessage());
     }
 }
 
@@ -77,6 +121,11 @@ function eliminarAlbum($id)
 {
     global $db;
     try {
+        // verificar que el id no este vacio
+        if (empty($id)) {
+            return respuesta(false, 'El ID del álbum es obligatorio.');
+        }
+
         // verificar si el album existe antes de eliminarlo
         $stmt = $db->prepare("SELECT COUNT(*) FROM ALBUM WHERE CODALBUM = ?");
         $stmt->execute([$id]);
@@ -91,8 +140,8 @@ function eliminarAlbum($id)
         $stmt->execute([$id]);
         $cancionesAsociadas = $stmt->fetchColumn();
 
+        // si hay canciones, quitarles la referencia al album
         if ($cancionesAsociadas > 0) {
-            // si hay canciones, se les quita la relacion con el album
             $stmt = $db->prepare("UPDATE CANCION SET CODALBUM = NULL WHERE CODALBUM = ?");
             $stmt->execute([$id]);
         }
@@ -112,34 +161,34 @@ function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = nul
 {
     global $db;
     try {
-        // verificar que los datos requeridos no esten vacios
+        // verificar que los datos principales no esten vacios
         if (empty($nombre) || empty($albumId) || empty($duracion) || empty($archivoAudio)) {
-            throw new Exception('Datos incompletos');
+            return respuesta(false, 'Datos incompletos');
         }
 
-        // limpiar el nombre para usarlo como nombre base del archivo
+        // limpiar el nombre para usar en archivos
         $nombreBase = preg_replace('/[^a-zA-Z0-9\-_]/', '_', $nombre);
 
-        // renombrar y guardar el archivo de audio
-        $archivoAudio['name'] = $nombreBase . '.' . pathinfo($archivoAudio['name'], PATHINFO_EXTENSION);
+        // cambiar el nombre del archivo de audio
+        $extension = pathinfo($archivoAudio['name'], PATHINFO_EXTENSION);
+        $archivoAudio['name'] = $nombreBase . '.' . $extension;
         $rutaAudio = guardarArchivo($archivoAudio, 'audio');
 
+        // procesar imagen si se subio
         $rutaImagen = null;
-        // si hay imagen, renombrar y guardar
         if ($imagen) {
-            $imagen['name'] = $nombreBase . '.' . pathinfo($imagen['name'], PATHINFO_EXTENSION);
+            $extensionImg = pathinfo($imagen['name'], PATHINFO_EXTENSION);
+            $imagen['name'] = $nombreBase . '.' . $extensionImg;
             $rutaImagen = guardarArchivo($imagen, 'imagen');
         }
 
-        // insertar los datos de la cancion en la base de datos
+        // insertar la cancion en la base de datos
         $stmt = $db->prepare("INSERT INTO CANCION (NOMBRE, CODALBUM, DURACION, AUDIO, IMAGEN) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$nombreBase, $albumId, $duracion, $rutaAudio, $rutaImagen]);
 
-        // devolver respuesta exitosa
-        return respuesta(true, 'Cancion creada correctamente');
+        return respuesta(true, 'Canción creada correctamente');
     } catch (Exception $e) {
-        // devolver respuesta con error
-        return respuesta(false, 'Error al crear la cancion: ' . $e->getMessage());
+        return respuesta(false, 'Error al crear la canción: ' . $e->getMessage());
     }
 }
 
@@ -147,87 +196,72 @@ function crearCancion($nombre, $albumId, $duracion, $archivoAudio, $imagen = nul
 function modificarCancion($id, $nombre, $duracion, $albumId = null, $archivoAudio = null, $imagen = null)
 {
     global $db;
-
     try {
         // aqui revisamos que el id, el nombre y la duracion no esten vacios
         if (empty($id) || empty($nombre) || empty($duracion)) {
             return respuesta(false, 'ID, nombre y duración son obligatorios');
         }
 
-        // aqui cambiamos los caracteres raros del nombre para poder usarlo como nombre de archivo
+        // limpiar el nombre para usarlo en nombres de archivo
         $nombreBase = str_replace([' ', '/', '\\', ':', '*', '?', '"', '<', '>', '|'], '_', $nombre);
 
         // aqui empezamos a crear el texto que actualiza la cancion
         $query = "UPDATE CANCION SET NOMBRE = ?, DURACION = ?";
-        $params = array($nombreBase, $duracion);
+        $params = [$nombreBase, $duracion];
 
-        // si nos pasan un album, lo agregamos al texto que actualiza
+        // si se proporciona albumId, incluirlo en la consulta
         if ($albumId !== null) {
-            $query .= ", CODALBUM = ?";
+            $query = $query . ", CODALBUM = ?";
             $params[] = $albumId;
         }
 
-        // aqui revisamos si nos mandaron un archivo de audio correcto
-        if ($archivoAudio && isset($archivoAudio['error']) && $archivoAudio['error'] === 0) {
+        // validacion y manejo de archivo de audio
+        $rutaAudio = null;
+        if ($archivoAudio && isset($archivoAudio['error']) && $archivoAudio['error'] === UPLOAD_ERR_OK) {
             $extensionAudio = strtolower(pathinfo($archivoAudio['name'], PATHINFO_EXTENSION));
-
-            // aqui revisamos si el audio tiene una extension permitida
-            if ($extensionAudio != 'mp3' && $extensionAudio != 'wav' && $extensionAudio != 'ogg') {
+            $extensionesAudioPermitidas = ['mp3', 'wav', 'ogg'];
+            if (!in_array($extensionAudio, $extensionesAudioPermitidas)) {
                 return respuesta(false, 'Formato de audio no válido (solo MP3, WAV, OGG)');
             }
-
-            // aqui cambiamos el nombre del archivo de audio para que sea como el nombre de la cancion
             $archivoAudio['name'] = $nombreBase . '.' . $extensionAudio;
-
-            // aqui guardamos el archivo de audio
             $rutaAudio = guardarArchivo($archivoAudio, 'audio');
-
-            // agregamos el audio al texto que actualiza
-            $query .= ", AUDIO = ?";
+            $query = $query . ", AUDIO = ?";
             $params[] = $rutaAudio;
         }
 
-        // aqui revisamos si nos mandaron una imagen correcta
-        if ($imagen && isset($imagen['error']) && $imagen['error'] === 0) {
+        // validacion y manejo de imagen
+        $rutaImagen = null;
+        if ($imagen && isset($imagen['error']) && $imagen['error'] === UPLOAD_ERR_OK) {
             $extensionImagen = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
-
-            // aqui revisamos si la imagen tiene una extension permitida
-            if ($extensionImagen != 'jpg' && $extensionImagen != 'jpeg' && $extensionImagen != 'png') {
+            $extensionesImagenPermitidas = ['jpg', 'jpeg', 'png'];
+            if (!in_array($extensionImagen, $extensionesImagenPermitidas)) {
                 return respuesta(false, 'Formato de imagen no válido (solo JPG, PNG)');
             }
-
-            // aqui cambiamos el nombre de la imagen para que sea como el nombre de la cancion
             $imagen['name'] = $nombreBase . '.' . $extensionImagen;
-
-            // aqui guardamos la imagen
             $rutaImagen = guardarArchivo($imagen, 'imagen');
-
-            // agregamos la imagen al texto que actualiza
-            $query .= ", IMAGEN = ?";
+            $query = $query . ", IMAGEN = ?";
             $params[] = $rutaImagen;
         }
 
         // aqui terminamos el texto que actualiza con el id de la cancion
-        $query .= " WHERE CODCANCION = ?";
+        $query = $query . " WHERE CODCANCION = ?";
         $params[] = $id;
 
-        // aqui preparamos y ejecutamos el texto para actualizar en la base de datos
+        // ejecutar consulta
         $stmt = $db->prepare($query);
         $stmt->execute($params);
 
-        // aqui revisamos si se actualizo alguna fila
+        // verificar si se actualizo alguna fila
         if ($stmt->rowCount() === 0) {
             return respuesta(false, 'No se encontró una canción con el ID proporcionado');
         }
 
-        // si todo salio bien, devolvemos que fue exitoso
-        return respuesta(true, 'Canción actualizada correctamente', array(
-            'audio' => isset($rutaAudio) ? $rutaAudio : null,
-            'imagen' => isset($rutaImagen) ? $rutaImagen : null
-        ));
-    } catch (Exception $e) {
-        // si algo falla, mostramos el error
-        return respuesta(false, 'Error: ' . $e->getMessage());
+        return respuesta(true, 'Canción actualizada correctamente', [
+            'audio' => $rutaAudio,
+            'imagen' => $rutaImagen
+        ]);
+    } catch (PDOException $e) {
+        return respuesta(false, 'Error al modificar la canción: ' . $e->getMessage());
     }
 }
 
