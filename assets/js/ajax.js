@@ -72,7 +72,7 @@ async function registrarUsuario() {
 
     // expresiones regulares:
     var regexEmail = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
-    var regexContrasena = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:"<>?])[A-Za-z\d!@#$%^&*()_+{}|:"<>?]{8,}$/;
+    var regexContrasena = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:"<>?.])[A-Za-z\d!@#$%^&*()_+{}|:"<>?.]{8,}$/;
 
     // que de aviso si esta mal el correo
     if (!regexEmail.test(nuevoCorreo)) {
@@ -87,20 +87,16 @@ async function registrarUsuario() {
     }
 
     // crear un objeto con los datos del usuario para enviarlos al servidor
-    var datosEnvio = {
-        nuevoUsuario: nuevoUsuario, // guardar el nombre de usuario
-        nuevoCorreo: nuevoCorreo, // guardar el correo
-        nuevaContrasena: nuevaContrasena // guardar la contraseña
-    };
+    var datosEnvio = new FormData();
+    datosEnvio.append('nuevoUsuario', nuevoUsuario); // guardar el nombre de usuario
+    datosEnvio.append('nuevoCorreo', nuevoCorreo); // guardar el correo
+    datosEnvio.append('nuevaContrasena', nuevaContrasena); // guardar la contraseña
 
     try {
         // enviar los datos al servidor usando una petición HTTP POST
         var respuesta = await fetch('./controladores/RegistrarControlador.php', {
             method: 'POST', // usar el método POST porque estamos enviando datos
-            headers: {
-                'Content-Type': 'application/json' // indicar que los datos están en formato JSON
-            },
-            body: JSON.stringify(datosEnvio) // convertir el objeto en JSON y enviarlo
+            body: datosEnvio // enviar los datos como FormData
         });
 
         var datos = await respuesta.json();
