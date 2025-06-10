@@ -435,8 +435,7 @@ function eliminarCancion($id) {
 }
 
 // funcion para obtener canciones
-function obtenerArtistas()
-{
+function obtenerArtistas() {
     global $db;
     try {
         // obtener todos los artistas de la base de datos
@@ -459,6 +458,37 @@ function obtenerArtistas()
         return json_encode([
             'exito' => false,
             'mensaje' => 'Error al obtener los artistas: ' . $e->getMessage()
+        ]);
+    }
+}
+
+function obtenerAlbumes() {
+    global $db;
+    try {
+        // obtener todos los albumes con informacion del artista
+        $stmt = $db->query("
+            SELECT ALBUM.CODALBUM, ALBUM.NOMBRE, ALBUM.FECHA_LANZAMIENTO, ALBUM.CARATULA, ARTISTA.NOMBRE AS ARTISTA
+            FROM ALBUM
+            INNER JOIN ARTISTA ON ALBUM.CODARTISTA = ARTISTA.CODARTISTA
+        ");
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            return json_encode([
+                'exito' => false,
+                'mensaje' => 'No se encontraron álbumes'
+            ]);
+        }
+
+        return json_encode([
+            'exito' => true,
+            'data' => $result
+        ]);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        return json_encode([
+            'exito' => false,
+            'mensaje' => 'Error al obtener los álbumes: ' . $e->getMessage()
         ]);
     }
 }
