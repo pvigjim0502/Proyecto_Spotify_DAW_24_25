@@ -536,6 +536,120 @@ function obtenerCanciones() {
     }
 }
 
+function guardarArchivo($archivo, $tipo = 'imagen')
+{
+    // verificacion mas detallada y descriptiva
+    if (!isset($archivo) || !is_array($archivo)) {
+        return respuesta(false, "El archivo no está definido o no es un arreglo válido");
+    }
+
+    if (empty($archivo['tmp_name'])) {
+        return respuesta(false, "El archivo temporal no existe");
+    }
+
+    if ($archivo['error'] !== UPLOAD_ERR_OK) {
+        $mensajesError = [
+            UPLOAD_ERR_INI_SIZE => 'El archivo excede el tamaño máximo permitido por PHP',
+            UPLOAD_ERR_FORM_SIZE => 'El archivo excede el tamaño máximo permitido por el formulario',
+            UPLOAD_ERR_PARTIAL => 'El archivo se cargó parcialmente',
+            UPLOAD_ERR_NO_FILE => 'No se seleccionó ningún archivo',
+            UPLOAD_ERR_NO_TMP_DIR => 'Falta la carpeta temporal',
+            UPLOAD_ERR_CANT_WRITE => 'Error al escribir el archivo',
+            UPLOAD_ERR_EXTENSION => 'Una extensión PHP detuvo la carga del archivo'
+        ];
+
+        $mensajesError = 'Error en la subida del archivo: ';
+        if (isset($mensajesError[$archivo['error']])) {
+            $mensajesError = $mensajesError . $mensajesError[$archivo['error']];
+        } else {
+            $mensajesError = $mensajesError . 'Error desconocido (código: ' . $archivo['error'] . ')';
+        }
+
+        return respuesta(false, $mensajesError);
+    }
+
+    // verificar que el archivo subido sea realmente una imagen si se trata de tipo 'imagen'
+    if ($tipo === 'imagen' && !getimagesize($archivo['tmp_name'])) {
+        return respuesta(false, "El archivo no es una imagen válida");
+    }
+
+    // definir los directorios para cada tipo de archivo
+    $directorios = [
+        'imagen' => __DIR__ . '/../assets/img/artista/',
+        'audio' => __DIR__ . '/../assets/audio/',
+        'album' => __DIR__ . '/../assets/img/album/'
+    ];
+
+    if (!isset($directorios[$tipo])) {
+        return respuesta(false, "Tipo de archivo no válido: " . $tipo);
+    }
+
+    $rutaBase = $directorios[$tipo];
+
+    // crear el directorio si no existe
+    if (!is_dir($rutaBase)) {
+        if (!mkdir($rutaBase, 0755, true)) {
+            return respuesta(false, "No se pudo crear el directorio: " . $rutaBase);
+        }
+    }
+
+    // verificar permisos de escritura
+    if (!is_writable($rutaBase)) {
+        return respuesta(false, "No se puede escribir en el directorio: " . $rutaBase);
+    }
+
+    // limpiar y crear nombre de archivo
+    $nombreArchivo = pathinfo($archivo['name'], PATHINFO_FILENAME);
+    $nombre = preg_replace('/[^a-zA-Z0-9\-_]/', '_', $nombreArchivo);
+    $extension = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
+
+    // validar la extension
+    $extensionesPermitidas = [
+        'imagen' => ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+        'audio' => ['mp3', 'wav', 'ogg'],
+        'album' => ['jpg', 'jpeg', 'png', 'gif', 'webp']
+    ];
+
+    if (!in_array($extension, $extensionesPermitidas[$tipo])) {
+        return respuesta(false, "Extensión de archivo no permitida: " . $extension);
+    }
+
+    // generar el nombre unico para evitar conflictos de archivos
+    $rutaDestino = $rutaBase . $nombre . '.' . $extension;
+
+    // control de archivos duplicados
+    $contador = 1;
+    while (file_exists($rutaDestino)) {
+        $rutaDestino = $rutaBase . $nombre . "_" . $contador . "." . $extension;
+        $contador = $contador + 1;
+    }
+
+    // mover el archivo
+    if (!move_uploaded_file($archivo['tmp_name'], $rutaDestino)) {
+        $ultimoError = error_get_last();
+        $mensajeError = "Error al guardar el archivo. ";
+        $mensajeError = $mensajeError . "Origen: " . $archivo['tmp_name'];
+        $mensajeError = $mensajeError . ", Destino: " . $rutaDestino;
+        if ($ultimoError) {
+            $mensajeError = $mensajeError . ". Detalles: " . $ultimoError['message'];
+        }
+        return respuesta(false, $mensajeError);
+    }
+
+    // devolver la ruta relativa para usar en html/css
+    $rutaRelativa = 'assets/';
+    if ($tipo === 'imagen') {
+        $rutaRelativa = $rutaRelativa . 'img/artista/';
+    } else if ($tipo === 'audio') {
+        $rutaRelativa = $rutaRelativa . 'audio/';
+    } else {
+        $rutaRelativa = $rutaRelativa . 'img/album/';
+    }
+    $rutaRelativa = $rutaRelativa . basename($rutaDestino);
+
+    return $rutaRelativa;
+}
+
 // funcion para generar respuestas json
 function respuesta($exito, $mensaje, $data = null) {
     return json_encode([
