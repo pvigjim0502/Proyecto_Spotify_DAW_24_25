@@ -434,6 +434,35 @@ function eliminarCancion($id) {
     }
 }
 
+// funcion para obtener canciones
+function obtenerArtistas()
+{
+    global $db;
+    try {
+        // obtener todos los artistas de la base de datos
+        $stmt = $db->query("SELECT * FROM ARTISTA");
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            return json_encode([
+                'exito' => false,
+                'mensaje' => 'No se encontraron artistas'
+            ]);
+        }
+
+        return json_encode([
+            'exito' => true,
+            'data' => $result
+        ]);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        return json_encode([
+            'exito' => false,
+            'mensaje' => 'Error al obtener los artistas: ' . $e->getMessage()
+        ]);
+    }
+}
+
 // funcion para generar respuestas json
 function respuesta($exito, $mensaje, $data = null) {
     return json_encode([
