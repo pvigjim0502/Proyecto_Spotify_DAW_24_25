@@ -153,6 +153,7 @@ function eliminarAlbum($id) {
     }
 }
 
+// funcion para crear un artista
 function crearArtista($nombre, $biografia, $fechaNacimiento, $paisOrigen, $imagen) {
     global $db;
     try {
@@ -194,6 +195,7 @@ function crearArtista($nombre, $biografia, $fechaNacimiento, $paisOrigen, $image
     }
 }
 
+// funcion para modificar un artista
 function modificarArtista($id, $nombre, $biografia, $fechaNacimiento, $paisOrigen, $imagen = null) {
     global $db;
     try {
@@ -250,6 +252,7 @@ function modificarArtista($id, $nombre, $biografia, $fechaNacimiento, $paisOrige
     }
 }
 
+// funcion para eliminar un artista
 function eliminarArtista($id) {
     global $db;
     try {
@@ -462,6 +465,7 @@ function obtenerArtistas() {
     }
 }
 
+// funcion para obtener album
 function obtenerAlbumes() {
     global $db;
     try {
