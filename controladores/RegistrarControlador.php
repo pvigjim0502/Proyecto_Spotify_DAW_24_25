@@ -10,8 +10,8 @@ require_once __DIR__ . '/../includes/funciones.php';
 
 $db = obtenerConexion();
 
-function registrarUsuario($data)
-{
+// funcion para registrar el usuario
+function registrarUsuario($data) {
     global $db;
 
     $respuesta = [
@@ -19,15 +19,17 @@ function registrarUsuario($data)
         'mensaje' => ''
     ];
 
+    // si falta algun dato, informar del error al usuario
     if (!isset($data['nuevoUsuario']) || !isset($data['nuevoCorreo']) || !isset($data['nuevaContrasena'])) {
         $respuesta['mensaje'] = 'Faltan datos del formulario';
         return $respuesta;
     }
 
-    $nuevoUsuario = limpiarEntrada($data['nuevoUsuario']);
-    $nuevoCorreo = limpiarEntrada($data['nuevoCorreo']);
-    $nuevaContrasena = limpiarEntrada($data['nuevaContrasena']);
+    $nuevoUsuario = limpiarEntrada($data['nuevoUsuario']); // limpiamos la entrada del usuario
+    $nuevoCorreo = limpiarEntrada($data['nuevoCorreo']); // limpiamos la entrada del correo
+    $nuevaContrasena = limpiarEntrada($data['nuevaContrasena']); // limpiamos la entrada de la contraseña
 
+    // informar si el usuario no introdujo el usuario y la contraseña
     if (!validarUsuario($nuevoUsuario, $nuevaContrasena)) {
         $respuesta['mensaje'] = 'El nombre de usuario y la contraseña son obligatorios.';
         return $respuesta;
@@ -63,6 +65,7 @@ function registrarUsuario($data)
         $stmt->bindParam(':correo', $nuevoCorreo);
         $stmt->bindParam(':contrasena', $hashedPassword);
 
+        // mostrar mensaje de usuario registrado correctamente o si dio algun error
         if ($stmt->execute()) {
             $respuesta['exito'] = true;
             $respuesta['mensaje'] = 'Usuario registrado exitosamente.';
