@@ -6,14 +6,14 @@ ini_set('display_errors', 1);
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
-function buscarEnBD($termino)
-{
+// funcion para la barra de búsquedas, para los terminos escritos
+function buscarEnBaseDeDatos($termino) {
     $db = obtenerConexion();
     // manera rapida y de abreviar el like del mysql en la busqueda
     $terminoBusqueda = '%' . $termino . '%';
 
     try {
-        // Buscar álbumes
+        // buscar albumes que hay en la base de datos
         $queryAlbumes = "SELECT a.CODALBUM, a.NOMBRE, a.CARATULA, a.CODARTISTA, ar.NOMBRE AS ARTISTA
                         FROM ALBUM a
                         JOIN ARTISTA ar ON a.CODARTISTA = ar.CODARTISTA
@@ -84,7 +84,7 @@ if (empty($termino)) {
 }
 
 // se realiza la busqudea
-$resultado = buscarEnBD($termino);
+$resultado = ($termino);
 
 // devuelve los resultados
 echo json_encode($resultado);
