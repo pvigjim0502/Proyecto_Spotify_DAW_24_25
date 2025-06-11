@@ -10,8 +10,8 @@ require_once __DIR__ . '/../includes/funciones.php';
 
 $db = obtenerConexion();
 
-function obtenerDatosUsuario($nombreUsuario)
-{
+// funcion para obtener los datos del usuario
+function obtenerDatosUsuario($nombreUsuario) {
     global $db;
 
     // limpiar la entrada del nombre de usuario
