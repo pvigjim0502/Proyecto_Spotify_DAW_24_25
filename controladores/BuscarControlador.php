@@ -1,5 +1,7 @@
 <?php
+// esto dice que la respuesta sera en formato json
 header('Content-Type: application/json');
+// esto muestra los errores si algo sale mal
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
