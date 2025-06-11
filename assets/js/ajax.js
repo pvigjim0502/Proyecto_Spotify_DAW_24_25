@@ -1,3 +1,4 @@
+// funcion de inicio de sesion
 async function iniciarSesion() {
     // obtener el nombre de usuario y la contraseña desde los campos de entrada
     var nombreUsuario = document.getElementById('nombreUsuario').value.trim();
@@ -59,6 +60,7 @@ async function iniciarSesion() {
     }
 }
 
+// funcion para poder registrar un nuevo usuario
 async function registrarUsuario() {
     // obtener los valores escritos en los campos de usuario, correo y contraseña
     var nuevoUsuario = document.getElementById('nuevoUsuario').value;
@@ -115,6 +117,7 @@ async function registrarUsuario() {
     }
 }
 
+// funcion para poder enviar el correo de recuperacion (olvido de contraseña)
 function enviarCorreoRecuperacion() {
     // guardamos el email que escribio el usuario
     var email = document.getElementById('emailOlvido').value;
@@ -156,6 +159,7 @@ function enviarCorreoRecuperacion() {
         });
 }
 
+// funcion para poder cargar el menu de admin
 async function cargarMenu() {
     try {
         const respuesta = await fetch('./controladores/ObtenerMenuControlador.php');
@@ -175,6 +179,7 @@ async function cargarMenu() {
     }
 }
 
+// funcion para cargar el apartado de la pagina 'Mi Perfil'
 async function cargarMiPerfil(evento) {
     if (evento) {
         evento.preventDefault();
@@ -200,6 +205,7 @@ async function cargarMiPerfil(evento) {
     }
 }
 
+// funcion para cerrar la sesion
 async function cerrarSesion() {
     const respuesta = await fetch('./controladores/CerrarSesionControlador.php', {
         method: 'POST',
@@ -222,6 +228,7 @@ async function cerrarSesion() {
     }
 }
 
+// funcion para obtener los datos
 async function obtenerDatos(url) {
     try {
         const respuesta = await fetch(url);
@@ -240,6 +247,7 @@ async function obtenerDatos(url) {
     }
 }
 
+// fuincion para cargar los albumnes
 async function cargarMusica() {
     const datos = await obtenerDatos('./controladores/MusicaControlador.php');
 
@@ -261,6 +269,7 @@ cargarMusica();
 
 var albumSeleccionadoId = 0;
 
+// funcion para cargar canciones
 async function cargarCanciones(albumId) {
     albumSeleccionadoId = albumId;
 
@@ -288,6 +297,7 @@ async function cargarCanciones(albumId) {
     }
 }
 
+// funcion para cargar los artistas
 async function cargarArtistas() {
     const artistas = await obtenerDatos('./controladores/ArtistaControlador.php');
 
@@ -301,6 +311,7 @@ async function cargarArtistas() {
 
 cargarArtistas();
 
+// funcion para cargar la tabla de los artistas en administracion
 async function cargarArtistasAdmin() {
     try {
         // conseguir la informacion de los artistas
@@ -354,6 +365,7 @@ async function cargarArtistasAdmin() {
     }
 }
 
+// funcion para cargar la tabla de los albumes en administracion
 async function cargarAlbumesAdmin() {
     try {
         // conseguir la informacion de los albumes
@@ -395,6 +407,7 @@ async function cargarAlbumesAdmin() {
     }
 }
 
+// funcion para cargar la tabla de las canciones en administracion
 async function cargarCancionesAdmin() {
     try {
         // conseguir la informacion de las canciones
@@ -438,6 +451,7 @@ async function cargarCancionesAdmin() {
     }
 }
 
+// llenar el selector con las canciones registradas
 async function llenarSelectCanciones() {
     const selects = [
         document.getElementById('cancionEliminar'),
@@ -477,6 +491,7 @@ async function llenarSelectCanciones() {
     }
 }
 
+// llenar el selector con los albumes registrados
 async function llenarSelectAlbumes() {
     const selects = [
         document.getElementById('albumSeleccionado'),
@@ -517,6 +532,7 @@ async function llenarSelectAlbumes() {
 
 llenarSelectAlbumes();
 
+// llenar el selector con los artistas registrados
 async function llenarSelectArtistas() {
     const selects = [
         document.getElementById('artistaAlbum'),
@@ -555,6 +571,7 @@ async function llenarSelectArtistas() {
 
 llenarSelectArtistas();
 
+// funcion para añadir una cancion
 function subirCancion(evento) {
     evento.preventDefault();
 
@@ -613,6 +630,7 @@ function subirCancion(evento) {
     return false;
 }
 
+// funcion para eliminar una cancion
 async function eliminarCancion(evento) {
     evento.preventDefault();
 
@@ -649,6 +667,7 @@ async function eliminarCancion(evento) {
     }
 }
 
+// funcion para modificar cancion
 async function modificarCancion(evento) {
     evento.preventDefault();
 
@@ -767,6 +786,7 @@ function añadirAlbum(evento) {
     });
 }
 
+// funcion para eliminar album
 function eliminarAlbum(evento) {
     evento.preventDefault();
 
@@ -1089,6 +1109,7 @@ async function buscarTodo() {
     }
 }
 
+// funcion para mostrar los resultados de busqueda (canciones, albumes y artistas)
 function mostrarResultados(datos, termino) {
     const contenedorResultados = document.getElementById('contenedorResultados');
     let html = '';
@@ -1202,6 +1223,7 @@ function mostrarResultados(datos, termino) {
     contenedorResultados.innerHTML = html;
 }
 
+// funcion para mostar el debido error en la busqueda
 function mostrarError(mensaje) {
     const contenedorResultados = document.getElementById('contenedorResultados');
     contenedorResultados.innerHTML = `
@@ -1212,6 +1234,7 @@ function mostrarError(mensaje) {
     `;
 }
 
+// funcion para colorear las palabras
 function resaltarTermino(texto, termino) {
     if (!texto || !termino) {
         return texto;
@@ -1221,6 +1244,7 @@ function resaltarTermino(texto, termino) {
     }
 }
 
+// funcion para limpiar la busqueda
 function limpiarBusqueda() {
     document.getElementById('buscar').value = '';
     document.getElementById('resultadosBusqueda').style.display = 'none';
@@ -1236,6 +1260,7 @@ document.addEventListener('click', function (event) {
     }
 });
 
+// funcion para cargar las canciones de la barra de busqueda
 function cargarCancionDesdeBusqueda(albumId) {
     cargarCanciones(albumId);
     document.getElementById('resultadosBusqueda').style.display = 'none';
