@@ -9,8 +9,7 @@ ini_set('display_errors', 1);
 require_once dirname(__FILE__) . '/../includes/db.php';
 
 // esta funcion busca los comentarios de un album
-function obtenerComentariosPorAlbum($idAlbum)
-{
+function obtenerComentariosPorAlbum($idAlbum) {
     // nos conectamos a la base de datos
     $db = obtenerConexion();
     try {
@@ -59,8 +58,7 @@ function obtenerComentariosPorAlbum($idAlbum)
 }
 
 // esta funcion es para dar me gusta o quitarlo
-function darLike($idComentario)
-{
+function darLike($idComentario) {
     // nos conectamos a la base de datos
     $db = obtenerConexion();
     // el nombre de la galleta para este comentario
@@ -104,8 +102,7 @@ function darLike($idComentario)
 }
 
 // esta funcion es para dar no me gusta o quitarlo
-function darDislike($idComentario)
-{
+function darDislike($idComentario) {
     // nos conectamos a la base de datos
     $db = obtenerConexion();
     // el nombre de la galleta para este comentario
@@ -149,8 +146,7 @@ function darDislike($idComentario)
 }
 
 // esta funcion es para escribir un comentario nuevo en un album
-function publicarComentario($usuarioNombre, $idAlbum, $comentario)
-{
+function publicarComentario($usuarioNombre, $idAlbum, $comentario) {
     // nos conectamos a la base de datos
     $db = obtenerConexion();
     try {
@@ -201,8 +197,7 @@ function publicarComentario($usuarioNombre, $idAlbum, $comentario)
 }
 
 // esta funcion es para cambiar un comentario que ya existe
-function editarComentario($idComentario, $comentarioNuevo)
-{
+function editarComentario($idComentario, $comentarioNuevo) {
     // nos conectamos a la base de datos
     $db = obtenerConexion();
     try {
@@ -234,8 +229,7 @@ function editarComentario($idComentario, $comentarioNuevo)
 }
 
 // esta funcion es para borrar un comentario
-function eliminarComentario($idComentario)
-{
+function eliminarComentario($idComentario) {
     // nos conectamos a la base de datos
     $db = obtenerConexion();
     try {
