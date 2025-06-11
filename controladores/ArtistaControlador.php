@@ -9,15 +9,17 @@ require_once dirname(__FILE__) . '/../includes/funciones.php';
 // obtener la conexion
 $db = obtenerConexion();
 
-function obtenerArtistas()
-{
+// funcion para obtener los artistas
+function obtenerArtistas() {
     global $db;
     try {
+        // hacemos la consulta a la base de datos
         $query = "SELECT * FROM ARTISTA";
         $stmt = $db->prepare($query);
         $stmt->execute();
-        $artistas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $artistas = $stmt->fetchAll(PDO::FETCH_ASSOC); // obtenemos la consulta
 
+        // verificamos los datos de la consulta
         if (empty($artistas)) {
             return [
                 'exito' => false,
