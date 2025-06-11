@@ -1,14 +1,15 @@
 <?php
-function limpiarEntrada($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
+// funcion para limpiar la entrada de datos
+function limpiarEntrada($data) {
+    $data = trim($data); // quitar espacios en blanco
+    $data = stripslashes($data); // quitar barras invertidas o comillas
+    $data = htmlspecialchars($data); // los caracteres especiales los convierte directamente a HTML
     return $data;
 }
 
-function validarUsuario($nombreUsuario, $contrasena)
-{
+// funcion para validar el usuario y la contraseña
+function validarUsuario($nombreUsuario, $contrasena) {
+    // si alguno de estos campos esta vacio dará un error
     if (empty($nombreUsuario) || empty($contrasena)) {
         return false;
     }
