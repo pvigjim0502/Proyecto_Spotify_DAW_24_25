@@ -8,19 +8,22 @@ ini_set('display_errors', 1);
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
-function procesarLogin()
-{
+// funcion para realizar el login
+function procesarLogin() {
     try {
+        // obtenemos el nombre de usuario
         $nombreUsuario = '';
         if (isset($_POST['nombreUsuario'])) {
             $nombreUsuario = limpiarEntrada($_POST['nombreUsuario']);
         }
 
+        // obtenemos la contraseña
         $contrasena = '';
         if (isset($_POST['contrasena'])) {
             $contrasena = limpiarEntrada($_POST['contrasena']);
         }
 
+        // validamos los datos
         if (!validarUsuario($nombreUsuario, $contrasena)) {
             return [
                 'exito' => false,
@@ -33,6 +36,7 @@ function procesarLogin()
         $stmt->execute([$nombreUsuario]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // comprobamos el usuario
         if (!$usuario) {
             return [
                 'exito' => false,
@@ -40,6 +44,7 @@ function procesarLogin()
             ];
         }
 
+        // comprobamos la contraseña
         if (!password_verify($contrasena, $usuario['CONTRASENA'])) {
             return [
                 'exito' => false,
@@ -52,6 +57,7 @@ function procesarLogin()
         $_SESSION['nombre_usuario'] = $usuario['NOMBRE_USUARIO'];
         $_SESSION['rol'] = $usuario['ROL'];
 
+        // le ponemos las cookies correspondientes
         setcookie('sesionActiva', 'true', time() + (7 * 24 * 60 * 60), "/");
         setcookie('usuarioNombre', $usuario['NOMBRE_USUARIO'], time() + (7 * 24 * 60 * 60), "/");
 
