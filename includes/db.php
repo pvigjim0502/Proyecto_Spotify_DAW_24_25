@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/config.php';
 
-function obtenerConexion()
-{
+// funcion para obtener la conexion directa de la base de datos
+function obtenerConexion() {
     try {
         $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NOMBRE . ";charset=" . CHARSET;
         $conexion = new PDO($dsn, DB_USUARIO, DB_CONTRASENA);
