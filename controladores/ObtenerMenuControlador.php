@@ -8,8 +8,8 @@ ini_set('display_errors', 1);
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
-function verificarRol($rolUsuario)
-{
+// funcion para verificar el rol del usuario (admin o usuario)
+function verificarRol($rolUsuario) {
     // limpiar la entrada del rol
     $rolUsuario = limpiarEntrada($rolUsuario);
     $respuesta = [
