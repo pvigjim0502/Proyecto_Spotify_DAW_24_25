@@ -8,8 +8,8 @@ ini_set('display_errors', 1);
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
-function obtenerMusica()
-{
+// funcion para obtener la musica
+function obtenerMusica() {
     // obtener la conexion
     $db = obtenerConexion();
 
